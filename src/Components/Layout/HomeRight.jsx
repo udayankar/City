@@ -1,0 +1,91 @@
+import { Map_URL } from "../../Assets/URL";
+import { useContext } from "react";
+import { CityContext } from "../../Context";
+
+const HomeRight = () => {
+    const {currentCity , setCurrentCity} = useContext(CityContext);
+
+    return (
+        <div className="right-cont">
+            <div className="explore-cont">
+                <div className="explore-top">
+                    <span className="explore-head">Explore and Navigate</span>
+                    <span className="explore-extend">View Full Map</span>
+                </div>
+                <iframe src={Map_URL[currentCity]} width="600" height="450" style={{border:0}} allowFullScreen="" loading="lazy" referrerPolicy="strict-origin-when-cross-origin"></iframe>
+                <div className="explore-tag">
+                    <button className="explore-park">🌲 Parks</button>
+                    <button className="explore-toilet">🚻 Toilets</button>
+                    <button className="explore-monument">🗿 Monuments</button>
+                    <button className="explore-user">💠 You are here</button>
+                </div>
+            </div>
+            <div className="travel-cont">
+                <div className="travel-top">
+                    <span className="travel-head">Travel and Transit</span>
+                    <span className="travel-extend">View all</span>
+                </div>
+                <div className="travel-body">
+                    <ul className="travel-mode">
+                        <li className="travel-mode-box">
+                            <span className="travel-mode-icon">🛣️</span>
+                            <span className="travel-mode-text">Plan Route</span>
+                        </li>
+                        <li className="travel-mode-box">
+                            <span className="travel-mode-icon">🚌</span>
+                            <span className="travel-mode-text">Bus Route</span>
+                        </li>
+                        <li className="travel-mode-box">
+                            <span className="travel-mode-icon">🚇</span>
+                            <span className="travel-mode-text">Metro Route</span>
+                        </li>
+                        <li className="travel-mode-box">
+                            <span className="travel-mode-icon">📍</span>
+                            <span className="travel-mode-text">Live Tracking</span>
+                        </li>
+                    </ul>
+                </div>
+                <div className="travel-foot">
+                    <div className="travel-start">
+                        <button className="travel-start-icon">🟢</button>
+                        <input className="travel-start-text" type="text" placeholder="From"></input>
+                    </div>
+                    <button className="travel-interchange">⬆️⬇️</button>
+                    <div className="travel-end">
+                        <button className="travel-end-icon">🍎</button>
+                        <input className="travel-end-text" type="text" placeholder="To"></input>
+                    </div>
+                    <button className="travel-confirm">Find Route</button>
+                </div>
+            </div>
+            <div className="event-cont">
+                <div className="event-top">
+                    <span className="event-head">Upcoming Events</span>
+                    <span className="event-extend">View all</span>
+                </div>
+                <div className="event-list">
+                    <div className="event-body">
+                        <img src="/." className="event-body-img"></img>
+                        <div className="event-info">
+                            <span className="event-body-name">Circus Mela</span>
+                            <span className="event-body-date">7-9 June 2026</span>
+                            <span className="event-body-loc">Old ITI Ground</span>
+                        </div>
+                        <button className="event-like">✅</button>
+                    </div>
+                    <div className="event-body">
+                        <img src="/." className="event-body-img"></img>
+                        <div className="event-info">
+                            <span className="event-body-name">Circus Mela</span>
+                            <span className="event-body-date">7-9 June 2026</span>
+                            <span className="event-body-loc">Old ITI Ground</span>
+                        </div>
+                        <button className="event-like">✅</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+};
+
+export default HomeRight;

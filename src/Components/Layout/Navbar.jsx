@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { CityContext } from "../../Context";
 
 const Navbar = () => {
     const [searchText , setSearchText] = useState("");
     const [isLoggedIn , setIsLoggedIn] = useState(true);
     const [showMenu , setShowMenu] = useState(false);
     const [showCity , setShowCity] = useState(false);
-    const [currentCity , setCurrentCity] = useState("Select your city")
-
+    const {currentCity , setCurrentCity} = useContext(CityContext);
+    
     return (
         <div className="nav-cont">
             <div className="search-cont">

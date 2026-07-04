@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
+import { Logo_URL } from "../../Assets/URL";
 
 const Sidebar = () => {
     return (
         <div className="side-nav">
             <div className="side-cont">
                 <div className="brand-cont">
-                    <img className="brand-icon" src="https://tse3.mm.bing.net/th/id/OIP.QUM-ZOG4QTjh8yGPt9ZrkgHaHa?pid=Api&P=0&h=180" alt="Brand Logo"></img>
+                    <img className="brand-icon" src={Logo_URL} alt="Brand Logo"></img>
                     <span className="brand-name">City</span>
                 </div>
                 <ul className="page-cont">
