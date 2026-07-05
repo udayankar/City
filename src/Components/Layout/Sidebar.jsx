@@ -1,7 +1,10 @@
 import { NavLink } from "react-router-dom";
 import { Logo_URL } from "../../Assets/URL";
+import { useState } from "react";
 
 const Sidebar = () => {
+    const [showExplore , setShowExplore] = useState(false);
+
     return (
         <div className="side-nav">
             <div className="side-cont">
@@ -12,12 +15,20 @@ const Sidebar = () => {
                 <ul className="page-cont">
                     <li className="page"><NavLink to="/">Home</NavLink></li>
                     <li><NavLink to="/community">Community</NavLink></li>
-                    <li><NavLink to="/explore">Explore City</NavLink></li>
-                    <li><NavLink to="/events">Events</NavLink></li>
-                    <li><NavLink to="/market">Marketplace</NavLink></li>
-                    <li><NavLink to="/travel">Travel and Transit</NavLink></li>
-                    <li><NavLink to="/parks">Parks and Outdoors</NavLink></li>
-                    <li><NavLink to="/toilets">Public Toilets</NavLink></li>
+                    <li>
+                        <button className="expand-btn" onClick={() => setShowExplore(!showExplore)}>
+                            <span>Explore City</span>
+                            <span>{showExplore ? "⬆️" : "⬇️"}</span>
+                        </button>
+                        {showExplore && (
+                        <ul className="submenu">
+                            <li><NavLink to="/events">Events</NavLink></li>
+                            <li><NavLink to="/market">Marketplace</NavLink></li>
+                            <li><NavLink to="/travel">Travel and Transit</NavLink></li>
+                            <li><NavLink to="/parks">Parks and Outdoors</NavLink></li>
+                            <li><NavLink to="/toilets">Public Toilets</NavLink></li>
+                        </ul>)}
+                    </li>
                 </ul>
                 <ul className="control-cont">
                     <li><NavLink to="/alerts">Alerts</NavLink></li>

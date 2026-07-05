@@ -1,18 +1,21 @@
+import Weather from "../../Utils/WeatherCall";
+import { useContext } from "react";
+import { CityContext } from "../../Context";
+
 const HomeMain = () => {
+    const { currentCity } = useContext(CityContext);
+
     return (
         <div className="main-cont">
             <div className="home-hero">
                 <div className="hero-top">
                     <span className="hero-greet">Good Morning, Udayan!</span>
-                    <span className="hero-update">Here's what's happening in Rohtak today.</span>
+                    <span className="hero-update">Here's what's happening in {currentCity} today.</span>
                 </div>
                 <div className="hero-mid">
-                    <div className="hero-climate">
-                        <span className="hero-temp">🌦️ 28*C</span>
-                        <span className="hero-disc">Light Rain</span>
-                    </div>
+                    <Weather/>
                     <div className="hero-info">
-                        <span className="hero-city">📍 Rohtak</span>
+                        <span className="hero-city">📍 {currentCity}</span>
                         <span className="hero-date">📅 Friday, 5 July 2025</span>
                     </div>
                 </div>
