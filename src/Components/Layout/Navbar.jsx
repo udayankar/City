@@ -1,5 +1,7 @@
 import { useContext, useState } from "react";
-import { CityContext } from "../../Context";
+import { NavLink } from "react-router-dom";
+import { CityContext , UserContext } from "../../Context";
+import NotifiedBell from "./Bell";
 
 const Navbar = () => {
     const [searchText , setSearchText] = useState("");
@@ -34,9 +36,7 @@ const Navbar = () => {
                         <li className="menu-item" onClick={() => {setCurrentCity("Gohana"); setShowCity(false)}}>Gohana</li>
                 </ul>)}
             </div>
-            <div className="bell-cont">
-                <button className="bell-icon">🔔</button>
-            </div>
+            <NavLink to="/notifications" className="bell-link"><NotifiedBell/></NavLink>
             <div className="user-cont">
                 <button className="user-icon">U</button>
                 {isLoggedIn ? (
