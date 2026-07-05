@@ -6,5 +6,7 @@ export const Map_URL = {
     Panipat : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d79805.57640129578!2d76.88171774182264!3d29.396485428312783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390dda457afbe651%3A0x41d3f6feacaa74d4!2sPanipat%2C%20Haryana!5e1!3m2!1sen!2sin!4v1783192632123!5m2!1sen!2sin",
 };
 
-export const Weather_URL = ["https://api.openweathermap.org/data/2.5/weather?q=" , "&units=metric&appid=85e6748f0188f35373816db3c43fa9ce"];
+const API_KEY = process.env.OPENWEATHER_API_KEY;
+
+export const Weather_URL = ["https://api.openweathermap.org/data/2.5/weather?q=" , `&units=metric&appid=${API_KEY}`];
 
