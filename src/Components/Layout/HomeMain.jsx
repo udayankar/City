@@ -1,22 +1,46 @@
 import Weather from "../../Utils/WeatherCall";
 import { useContext } from "react";
 import { CityContext } from "../../Context";
+import { alerts } from "../../Data/alerts";
+import { posts } from "../../Data/posts";
+import HomeAlert from "./HomeAlert";
+import HomePost from "./HomePost";
 
 const HomeMain = () => {
     const { currentCity } = useContext(CityContext);
+    const today = new Date();
+    const hour = today.getHours();
+    const formattedDate = today.toLocaleDateString("en-IN", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    });
+
+    let greeting = "";
+
+    if (hour >= 5 && hour < 12) {
+        greeting = "Good Morning";
+    } else if (hour >= 12 && hour < 17) {
+        greeting = "Good Afternoon";
+    } else if (hour >= 17 && hour < 21) {
+        greeting = "Good Evening";
+    } else {
+        greeting = "Good Night";
+    }
 
     return (
         <div className="main-cont">
             <div className="home-hero">
                 <div className="hero-top">
-                    <span className="hero-greet">Good Morning, Udayan!</span>
+                    <span className="hero-greet">{greeting}, Udayan!</span>
                     <span className="hero-update">Here's what's happening in {currentCity} today.</span>
                 </div>
                 <div className="hero-mid">
                     <Weather/>
                     <div className="hero-info">
                         <span className="hero-city">📍 {currentCity}</span>
-                        <span className="hero-date">📅 Friday, 5 July 2025</span>
+                        <span className="hero-date">📅 {formattedDate}</span>
                     </div>
                 </div>
                 <div className="hero-foot">
@@ -31,30 +55,9 @@ const HomeMain = () => {
                     <span className="home-alert-extend">View all</span>
                 </div>
                 <div className="home-alert-show">
-                    <div className="home-alert-cont">
-                        <span className="home-alert-icon">👷‍♂️</span>
-                        <div className="home-alert-detail">
-                            <span className="home-alert-name">Road work on MG Road</span>
-                            <span className="home-alert-info">Expect delays near Bus Stand</span>
-                            <span className="home-alert-time">1h ago</span>
-                        </div>
-                    </div>
-                    <div className="home-alert-cont">
-                        <span className="home-alert-icon">👷‍♂️</span>
-                        <div className="home-alert-detail">
-                            <span className="home-alert-name">Road work on MG Road</span>
-                            <span className="home-alert-info">Expect delays near Bus Stand</span>
-                            <span className="home-alert-time">1h ago</span>
-                        </div>
-                    </div>
-                    <div className="home-alert-cont">
-                        <span className="home-alert-icon">👷‍♂️</span>
-                        <div className="home-alert-detail">
-                            <span className="home-alert-name">Road work on MG Road</span>
-                            <span className="home-alert-info">Expect delays near Bus Stand</span>
-                            <span className="home-alert-time">1h ago</span>
-                        </div>
-                    </div>
+                    {alerts.slice(0,3).map(alert => (
+                        <HomeAlert key={alert.id} icon={alert.icon} name={alert.title} info={alert.info} time={alert.time}/>
+                    ))}
                 </div>
             </div>
             <div className="home-foot">
@@ -65,30 +68,11 @@ const HomeMain = () => {
                     <span className="home-foot-tag">Following</span>
                 </div>
                 <div className="home-foot-list">
-                    <div className="home-post">
-                        <div className="home-post-top">
-                            <div className="home-post-user">
-                                <img src="/abc" className="home-post-dp"/>
-                                <div className="home-post-profile">
-                                    <span className="home-post-name">Rahul Kar</span>
-                                    <span className="home-post-username">@kar_rahul • 2h ago</span>
-                                    <span className="home-post-location">📍 Bus Stand,Rohtak</span>
-                                </div>
-                            </div>
-                            <button className="home-post-menu">⋮</button>
-                        </div>
-                        <div className="home-post-body">
-                            <span className="home-post-title">Heavy traffic near Bus Stand</span>
-                            <p className="home-post-text">Avoid MG Road if you're travelling this evening.Traffic police have diverted vehicles because ofconstruction work.</p>
-                        </div>
-                        <div className="home-post-bottom">
-                            <button className="post-action">👍 48</button>
-                            <button className="post-action">💬 12</button>
-                            <button className="post-action">🔄 Share</button>
-                            <button className="post-action">🔖 Save</button>
-                        </div>
-                    </div>
+                    {posts.map(post => (
+                        <HomePost key={post.id} dp={post.image} name={post.name} username={post.username} time={post.time} loc={post.location} title={post.title} text={post.text} like={post.likes} com={post.comments} share={post.shares}/>
+                    ))}
                 </div>
+                <button className="home-foot-link">View Full Community ➡️</button>
             </div>
         </div>
     )
