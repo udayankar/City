@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { CityContext } from "./Context";
+import { CityContext } from "./Utils/Context";
+import AppStore from "./Utils/AppStore";
+import { Provider } from "react-redux"; 
 import "./style.css";
 import Navbar from "./Components/Layout/Navbar";
 import Sidebar from "./Components/Layout/Sidebar";
@@ -12,15 +14,17 @@ const App = () => {
     const [currentCity, setCurrentCity] = useState("Select your city");
 
     return (
-        <CityContext.Provider value={{currentCity , setCurrentCity}}>
-            <div className="app-layout">
-                <Sidebar />
-                <div className="main-layout">
-                    <Navbar />
-                    <Outlet/>
+        <Provider store={AppStore}>
+            <CityContext.Provider value={{currentCity , setCurrentCity}}>
+                <div className="app-layout">
+                    <Sidebar />
+                    <div className="main-layout">
+                        <Navbar />
+                        <Outlet/>
+                    </div>
                 </div>
-            </div>
-        </CityContext.Provider>
+            </CityContext.Provider>
+        </Provider>
     );
 };
 

@@ -1,10 +1,12 @@
 import Weather from "../../Utils/WeatherCall";
 import { useContext } from "react";
-import { CityContext } from "../../Context";
+import { CityContext } from "../../Utils/Context";
 import { alerts } from "../../Data/alerts";
 import { posts } from "../../Data/posts";
 import HomeAlert from "./HomeAlert";
 import HomePost from "./HomePost";
+import { useDispatch } from "react-redux";
+import { addItem , removeItem } from "../../Utils/SavedSlice";
 
 const HomeMain = () => {
     const { currentCity } = useContext(CityContext);
@@ -18,7 +20,6 @@ const HomeMain = () => {
     });
 
     let greeting = "";
-
     if (hour >= 5 && hour < 12) {
         greeting = "Good Morning";
     } else if (hour >= 12 && hour < 17) {
@@ -28,6 +29,8 @@ const HomeMain = () => {
     } else {
         greeting = "Good Night";
     }
+
+    const dispatch = useDispatch();
 
     return (
         <div className="main-cont">
@@ -69,7 +72,7 @@ const HomeMain = () => {
                 </div>
                 <div className="home-foot-list">
                     {posts.map(post => (
-                        <HomePost key={post.id} dp={post.image} name={post.name} username={post.username} time={post.time} loc={post.location} title={post.title} text={post.text} like={post.likes} com={post.comments} share={post.shares}/>
+                        <HomePost key={post.id} dp={post.image} name={post.name} username={post.username} time={post.time} loc={post.location} title={post.title} text={post.text} like={post.likes} com={post.comments} share={post.shares} toSave={() => dispatch(addItem(event))} notSave={() => dispatch(removeItem(event))}/>
                     ))}
                 </div>
                 <button className="home-foot-link">View Full Community ➡️</button>

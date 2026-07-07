@@ -1,4 +1,9 @@
-const HomePost = ({dp , name , username , time , loc , title , text , like , com , share}) => {
+import { useState } from "react";
+
+const HomePost = ({dp , name , username , time , loc , title , text , like , com , share , toSave , notSave}) => {
+
+    const [isSaved , setIsSaved] = useState(false)
+
     return (
         <div className="home-post">
             <div className="home-post-top">
@@ -20,7 +25,13 @@ const HomePost = ({dp , name , username , time , loc , title , text , like , com
                 <button className="post-action">👍 {like}</button>
                 <button className="post-action">💬 {com}</button>
                 <button className="post-action">🔄 {share}</button>
-                <button className="post-action">🔖 Save</button>
+                <button className="post-action" onClick={() => {
+                    if (isSaved) {
+                        notSave(); setIsSaved(!isSaved);
+                    } else {
+                        toSave(); setIsSaved(!isSaved);
+                    }
+                }}>{isSaved ? "✅ Saved" : "🔖 Save"}</button>
             </div>
         </div>
     )

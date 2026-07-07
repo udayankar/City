@@ -1,4 +1,3 @@
-
 const Bell = () => {
     return (
             <button className="bell-icon">🔔</button>

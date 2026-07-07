@@ -7,7 +7,7 @@ export const posts = [
         time: "12 min ago",
         title: "Traffic near Bus Stand",
         text: "Avoid MG Road if you're heading towards the bus stand. Construction work has slowed traffic significantly.",
-        image: "",
+        image: "abc",
         likes: 48,
         comments: 13,
         shares: 6
@@ -20,7 +20,7 @@ export const posts = [
         time: "35 min ago",
         title: "New Café Recommendation ☕",
         text: "Tried Brew Corner today. Amazing coffee and peaceful atmosphere. Definitely worth visiting.",
-        image: "",
+        image: "abc",
         likes: 127,
         comments: 24,
         shares: 12
@@ -33,7 +33,7 @@ export const posts = [
         time: "1 hour ago",
         title: "Lost Wallet",
         text: "Lost my brown wallet near Railway Road around 5 PM. Please contact me if anyone finds it.",
-        image: "",
+        image: "abc",
         likes: 15,
         comments: 32,
         shares: 9
@@ -46,7 +46,7 @@ export const posts = [
         time: "2 hours ago",
         title: "Morning Walk ❤️",
         text: "The newly renovated walking track in City Park looks fantastic. Great place for families.",
-        image: "",
+        image: "abc",
         likes: 212,
         comments: 41,
         shares: 18
@@ -59,7 +59,7 @@ export const posts = [
         time: "3 hours ago",
         title: "Blood Donation Camp",
         text: "Free blood donation camp tomorrow from 10 AM to 4 PM at Civil Hospital. Please participate if you can.",
-        image: "",
+        image: "abc",
         likes: 94,
         comments: 17,
         shares: 31
@@ -72,7 +72,7 @@ export const posts = [
         time: "5 hours ago",
         title: "Food Festival is Back! 🍔",
         text: "More than 40 food stalls this weekend. Live music starts at 7 PM. Perfect family outing.",
-        image: "",
+        image: "abc",
         likes: 351,
         comments: 66,
         shares: 54

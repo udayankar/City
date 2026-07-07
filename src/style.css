@@ -33,6 +33,10 @@ body{
     overflow-y: auto;
 }
 
+.side-cont::-webkit-scrollbar{
+    display: none;
+}
+
 .brand-cont{
     display: flex;
     align-items: center;
@@ -607,7 +611,28 @@ body{
 .event-list{
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
+    max-height: 560px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.event-list::-webkit-scrollbar{
+    display: none;
+}
+
+.event-list > *{
+    border: 1px solid transparent;
+    border-radius: 12px;
+    transition: border-color .25s ease, background-color .25s ease, transform .2s ease;
+}
+
+.event-list > *:hover{
+    border-color: #5B4CF6;
+    background: #f7f5ff;
+    transform: translateX(1px);
+    cursor: pointer;
 }
 
 .event-body{

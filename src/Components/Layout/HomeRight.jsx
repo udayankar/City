@@ -1,9 +1,14 @@
 import { Map_URL } from "../../Assets/URL";
 import { useContext } from "react";
-import { CityContext } from "../../Context";
+import { CityContext } from "../../Utils/Context";
+import events from "../../Data/events";
+import HomeEvent from "./HomeEvent";
+import { useDispatch } from "react-redux";
+import { addItem , removeItem } from "../../Utils/SavedSlice";
 
 const HomeRight = () => {
     const {currentCity , setCurrentCity} = useContext(CityContext);
+    const dispatch = useDispatch();
 
     return (
         <div className="right-cont">
@@ -64,24 +69,9 @@ const HomeRight = () => {
                     <span className="event-extend">View all</span>
                 </div>
                 <div className="event-list">
-                    <div className="event-body">
-                        <img src="/." className="event-body-img"></img>
-                        <div className="event-info">
-                            <span className="event-body-name">Circus Mela</span>
-                            <span className="event-body-date">7-9 June 2026</span>
-                            <span className="event-body-loc">Old ITI Ground</span>
-                        </div>
-                        <button className="event-like">✅</button>
-                    </div>
-                    <div className="event-body">
-                        <img src="/." className="event-body-img"></img>
-                        <div className="event-info">
-                            <span className="event-body-name">Circus Mela</span>
-                            <span className="event-body-date">7-9 June 2026</span>
-                            <span className="event-body-loc">Old ITI Ground</span>
-                        </div>
-                        <button className="event-like">✅</button>
-                    </div>
+                    {events.map(event => (
+                        <HomeEvent key={event.id} img={event.image} name={event.title} date={event.date} loc={event.location} toSave={() => dispatch(addItem(event))} notSave={() => dispatch(removeItem(event))}/>
+                    ))}
                 </div>
             </div>
         </div>

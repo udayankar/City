@@ -1,9 +1,13 @@
 import { NavLink } from "react-router-dom";
 import { Logo_URL } from "../../Assets/URL";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
     const [showExplore , setShowExplore] = useState(false);
+
+    const SaveLen = useSelector((store) => store.Saved.length);
+    console.log(SaveLen);
 
     return (
         <div className="side-nav">
@@ -32,7 +36,7 @@ const Sidebar = () => {
                 </ul>
                 <ul className="control-cont">
                     <li><NavLink to="/alerts">Alerts</NavLink></li>
-                    <li><NavLink to="/saved">Saved</NavLink></li>
+                    <li><NavLink to="/saved">Saved ({SaveLen})</NavLink></li>
                     <li><NavLink to="/profile">Profile</NavLink></li>
                     <li><NavLink to="/settings">Settings</NavLink></li>
                 </ul>

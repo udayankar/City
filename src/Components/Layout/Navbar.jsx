@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { CityContext , UserContext } from "../../Context";
+import { CityContext } from "../../Utils/Context";
 import NotifiedBell from "./Bell";
 
 const Navbar = () => {

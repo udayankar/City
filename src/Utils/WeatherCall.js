@@ -1,6 +1,6 @@
 import { Weather_URL } from "../Assets/URL";
 import { useContext, useState , useEffect } from "react";
-import { CityContext } from "../Context";
+import { CityContext } from "./Context";
 
 const Weather = () => {
     const { currentCity } = useContext(CityContext);
@@ -17,7 +17,7 @@ const Weather = () => {
     return (
         <div className="hero-climate">
             <span className="hero-temp">🌦️ {weather?.main?.temp}*C</span>
-            <span className="hero-disc">{weather?.weather?.[0]?.description?.charAt(0).toUpperCase() + weather?.weather?.[0]?.description?.slice(1)}</span>
+            <span className="hero-disc">{currentCity && weather?.weather?.[0]?.description ? weather?.weather?.[0]?.description?.charAt(0).toUpperCase() + weather?.weather?.[0]?.description?.slice(1) : ""}</span>
         </div>
     )
 };
