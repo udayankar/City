@@ -70,7 +70,7 @@ const HomeRight = () => {
                 </div>
                 <div className="event-list">
                     {events.map(event => (
-                        <HomeEvent key={event.id} img={event.image} name={event.title} date={event.date} loc={event.location} toSave={() => dispatch(addItem(event))} notSave={() => dispatch(removeItem(event))}/>
+                        <HomeEvent key={event.id} {...event} toSave={() => dispatch(addItem(event))} notSave={() => dispatch(removeItem(event))}/>
                     ))}
                 </div>
             </div>

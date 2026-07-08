@@ -1,15 +1,15 @@
 import { useState } from "react";
 
-const HomeEvent = ({img , name , date , loc , toSave , notSave}) => {
+const HomeEvent = ({image , title , date , location , toSave , notSave}) => {
     const [isSaved , setIsSaved] = useState(false)
 
     return (
         <div className="event-body">
-            <img src={img} className="event-body-img"></img>
+            <img src={image} className="event-body-img"></img>
             <div className="event-info">
-                <span className="event-body-name">{name}</span>
+                <span className="event-body-name">{title}</span>
                 <span className="event-body-date">{date}</span>
-                <span className="event-body-loc">📍{loc}</span>
+                <span className="event-body-loc">📍{location}</span>
             </div>
             <button className="event-like" onClick={() => {
                 if (isSaved) {

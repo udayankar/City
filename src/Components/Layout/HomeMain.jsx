@@ -59,7 +59,7 @@ const HomeMain = () => {
                 </div>
                 <div className="home-alert-show">
                     {alerts.slice(0,3).map(alert => (
-                        <HomeAlert key={alert.id} icon={alert.icon} name={alert.title} info={alert.info} time={alert.time}/>
+                        <HomeAlert key={alert.id} {...alert}/>
                     ))}
                 </div>
             </div>
@@ -72,7 +72,7 @@ const HomeMain = () => {
                 </div>
                 <div className="home-foot-list">
                     {posts.map(post => (
-                        <HomePost key={post.id} dp={post.image} name={post.name} username={post.username} time={post.time} loc={post.location} title={post.title} text={post.text} like={post.likes} com={post.comments} share={post.shares} toSave={() => dispatch(addItem(event))} notSave={() => dispatch(removeItem(event))}/>
+                        <HomePost key={post.id} {...post} toSave={() => dispatch(addItem(event))} notSave={() => dispatch(removeItem(event))}/>
                     ))}
                 </div>
                 <button className="home-foot-link">View Full Community ➡️</button>
