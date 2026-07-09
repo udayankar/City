@@ -2,13 +2,18 @@ import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { CityContext } from "../../Utils/Context";
 import NotifiedBell from "./Bell";
+import { useSelector , useDispatch } from "react-redux";
+import { outUser } from "../../Utils/UserSlice";
 
 const Navbar = () => {
     const [searchText , setSearchText] = useState("");
-    const [isLoggedIn , setIsLoggedIn] = useState(true);
     const [showMenu , setShowMenu] = useState(false);
     const [showCity , setShowCity] = useState(false);
     const {currentCity , setCurrentCity} = useContext(CityContext);
+    const user = useSelector((store) => store.User);
+    const isLoggedIn = user.isLoggedIn;
+    const name = user.name;
+    const dispatch = useDispatch();
     
     return (
         <div className="nav-cont">
@@ -38,24 +43,24 @@ const Navbar = () => {
             </div>
             <NavLink to="/notifications" className="bell-link"><NotifiedBell/></NavLink>
             <div className="user-cont">
-                <button className="user-icon">U</button>
+                {isLoggedIn && (
+                    <button className="user-icon">{name[0].toUpperCase()}</button>
+                )}
                 {isLoggedIn ? (
                 <>
                     <button className="user-profile" onClick={() => {setShowMenu(!showMenu)}}>
-                        <span className="user-name">Udayan</span>
+                        <span className="user-name">{name}</span>
                         <span className="user-arrow">▼</span>
                     </button>
                     { showMenu && (
                     <ul className="user-menu">
                         <li className="menu-item" onClick={() => {setShowMenu(false)}}>Profile</li>
                         <li className="menu-item" onClick={() => {setShowMenu(false)}}>Settings</li>
-                        <li className="menu-item" onClick={() => {setShowMenu(false)}}>Sign Out</li>
+                        <li className="menu-item" onClick={() => {setShowMenu(false); dispatch(outUser())}}>Sign Out</li>
                     </ul> )}
                 </>
                     ) : (
-                    <button className="user-state">
-                        Log In
-                    </button>
+                    <NavLink className="login-link" to="/login">Log In</NavLink>
                     )}
             </div>
         </div>

@@ -16,5 +16,5 @@ const SavedSlice = createSlice({
     }
 });
 
-export const { addItem , removeItem , clearItem} = SavedSlice.actions;
+export const { addItem , removeItem , clearItem } = SavedSlice.actions;
 export default SavedSlice.reducer; 

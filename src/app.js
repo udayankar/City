@@ -7,6 +7,7 @@ import "./style.css";
 import Navbar from "./Components/Layout/Navbar";
 import Sidebar from "./Components/Layout/Sidebar";
 import Rightbar from "./Components/Layout/HomeRight";
+import Login from "./Components/Layout/Login";
 import Home from "./Pages/Home";
 import { createBrowserRouter , RouterProvider , Outlet } from "react-router-dom";
 
@@ -14,17 +15,15 @@ const App = () => {
     const [currentCity, setCurrentCity] = useState("Select your city");
 
     return (
-        <Provider store={AppStore}>
-            <CityContext.Provider value={{currentCity , setCurrentCity}}>
-                <div className="app-layout">
-                    <Sidebar />
-                    <div className="main-layout">
-                        <Navbar />
-                        <Outlet/>
-                    </div>
+        <CityContext.Provider value={{currentCity , setCurrentCity}}>
+            <div className="app-layout">
+                <Sidebar />
+                <div className="main-layout">
+                    <Navbar />
+                    <Outlet/>
                 </div>
-            </CityContext.Provider>
-        </Provider>
+            </div>
+        </CityContext.Provider>
     );
 };
 
@@ -38,9 +37,13 @@ const AppRouter = createBrowserRouter([
                 element: <Home/>
             }
         ]
+    },
+    {
+        path: "/login",
+        element: <Login />
     }
 ]);
 
 const root = createRoot(document.getElementById("root"));
 
-root.render(<RouterProvider router={AppRouter} /> );
+root.render(<Provider store={AppStore}><RouterProvider router={AppRouter} /></Provider>);

@@ -5,7 +5,7 @@ import { alerts } from "../../Data/alerts";
 import { posts } from "../../Data/posts";
 import HomeAlert from "./HomeAlert";
 import HomePost from "./HomePost";
-import { useDispatch } from "react-redux";
+import { useDispatch , useSelector } from "react-redux";
 import { addItem , removeItem } from "../../Utils/SavedSlice";
 
 const HomeMain = () => {
@@ -31,12 +31,14 @@ const HomeMain = () => {
     }
 
     const dispatch = useDispatch();
+    const user = useSelector((store) => store.User);
+    const name = user.name;
 
     return (
         <div className="main-cont">
             <div className="home-hero">
                 <div className="hero-top">
-                    <span className="hero-greet">{greeting}, Udayan!</span>
+                    <span className="hero-greet">{greeting}, {name}!</span>
                     <span className="hero-update">Here's what's happening in {currentCity} today.</span>
                 </div>
                 <div className="hero-mid">
