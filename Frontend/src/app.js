@@ -7,7 +7,8 @@ import "./style.css";
 import Navbar from "./Components/Layout/Navbar";
 import Sidebar from "./Components/Layout/Sidebar";
 import Rightbar from "./Components/Layout/HomeRight";
-import Login from "./Components/Layout/Login";
+import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
 import Home from "./Pages/Home";
 import { createBrowserRouter , RouterProvider , Outlet } from "react-router-dom";
 
@@ -40,7 +41,11 @@ const AppRouter = createBrowserRouter([
     },
     {
         path: "/login",
-        element: <Login />
+        element: <Login/>
+    },
+    {
+     path: "/signup",
+     element: <Signup/>   
     }
 ]);
 

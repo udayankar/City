@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { inUser , outUser } from "../../Utils/UserSlice";
+import { inUser , outUser } from "../Utils/UserSlice";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -32,7 +32,7 @@ const Login = () => {
             </div>
             <div className="login-end">
                 <span className="login-not">Don't have an account?</span>
-                <span className="login-signup">Sign Up</span>
+                <span className="login-signup" onClick={() => navigate("/signup")}>Sign Up</span>
             </div>
         </div>
     )
