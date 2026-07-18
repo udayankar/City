@@ -1231,6 +1231,7 @@ body{
     outline: none;
     transition: all .25s ease;
     box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    caret-color: black;
 }
 
 .login-email::placeholder , .login-password::placeholder{
@@ -1310,5 +1311,10 @@ body{
 
 .login-signup:hover{
     text-decoration: underline;
+}
+
+.login-error{
+    color:red;
+    font-size:14px;
 }
 

@@ -4,20 +4,19 @@ const UserSlice = createSlice({
     name : "User",
     initialState : {
         email : "",
-        password : "",
         isLoggedIn : false,
-        name : "Udayan"
+        name : "User"
     },
     reducers : {
         inUser : (state , action) => {
             state.email = action.payload.email,
-            state.password = action.payload.password,
-            state.isLoggedIn = true
+            state.isLoggedIn = true,
+            state.name = action.payload.name
         },
         outUser : (state , action) => {
             state.email = "",
-            state.password = "",
-            state.isLoggedIn = false
+            state.isLoggedIn = false,
+            state.name = "User"
         }
     }
 });
