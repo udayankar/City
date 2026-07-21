@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SignupUser from "../Utils/API";
+import { SignupUser } from "../Utils/API";
 import { inUser } from "../Utils/UserSlice";
 import { useSelector , useDispatch } from "react-redux";
 

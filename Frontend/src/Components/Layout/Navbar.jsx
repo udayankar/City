@@ -14,6 +14,15 @@ const Navbar = () => {
     const isLoggedIn = user.isLoggedIn;
     const name = user.name;
     const dispatch = useDispatch();
+
+    const handle_logout = async () => {
+        await fetch("http://localhost:8000/users/logout", {
+            method: "POST",
+            credentials: "include"
+        });
+        dispatch(outUser())
+        setShowMenu(false)
+    }
     
     return (
         <div className="nav-cont">
@@ -56,7 +65,7 @@ const Navbar = () => {
                     <ul className="user-menu">
                         <li className="menu-item" onClick={() => {setShowMenu(false)}}>Profile</li>
                         <li className="menu-item" onClick={() => {setShowMenu(false)}}>Settings</li>
-                        <li className="menu-item" onClick={() => {setShowMenu(false); dispatch(outUser())}}>Sign Out</li>
+                        <li className="menu-item" onClick={handle_logout}>Sign Out</li>
                     </ul> )}
                 </>
                     ) : (

@@ -17,3 +17,5 @@ class LoginUser(BaseModel):
     Email : EmailStr
     Password : str
 
+
+
