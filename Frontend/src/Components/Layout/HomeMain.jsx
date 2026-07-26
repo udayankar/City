@@ -5,11 +5,12 @@ import { alerts } from "../../Data/alerts";
 import { posts } from "../../Data/posts";
 import HomeAlert from "./HomeAlert";
 import HomePost from "./HomePost";
-import { useDispatch , useSelector } from "react-redux";
-import { addItem , removeItem } from "../../Utils/SavedSlice";
+import { useSelector } from "react-redux";
 
 const HomeMain = () => {
     const { currentCity } = useContext(CityContext);
+    const user = useSelector((store) => store.User);
+    const name = user.name;
     const today = new Date();
     const hour = today.getHours();
     const formattedDate = today.toLocaleDateString("en-IN", {
@@ -29,10 +30,6 @@ const HomeMain = () => {
     } else {
         greeting = "Good Night";
     }
-
-    const dispatch = useDispatch();
-    const user = useSelector((store) => store.User);
-    const name = user.name;
 
     return (
         <div className="main-cont">

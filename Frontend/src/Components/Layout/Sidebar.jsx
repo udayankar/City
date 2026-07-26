@@ -1,13 +1,32 @@
 import { NavLink } from "react-router-dom";
 import { Logo_URL } from "../../Assets/URL";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useState  , useEffect } from "react";
+import { useSelector , useDispatch } from "react-redux";
+import { Saved } from "../../Utils/API";
+import { setItems } from "../../Utils/SavedSlice";
 
 const Sidebar = () => {
     const [showExplore , setShowExplore] = useState(false);
 
-    const SaveLen = useSelector((store) => store.Saved.length);
-    console.log(SaveLen);
+    const dispatch = useDispatch()
+    const user = useSelector((store) => store.User)
+    const isLoggedin = user.isLoggedIn
+    const save = useSelector((store) => store.Saved)
+
+    const handle_saved = async () => {
+        const response = await Saved();
+        if (response.success) {
+            dispatch(setItems(response.data))
+        }
+    }
+
+    useEffect(() => {
+        if (!isLoggedin) {
+            dispatch(setItems([]));
+            return;
+        }
+        handle_saved()
+    } , [isLoggedin])
 
     return (
         <div className="side-nav">
@@ -36,7 +55,7 @@ const Sidebar = () => {
                 </ul>
                 <ul className="control-cont">
                     <li><NavLink to="/alerts">Alerts</NavLink></li>
-                    <li><NavLink to="/saved">Saved ({SaveLen})</NavLink></li>
+                    <li><NavLink to="/saved">Saved ({save.length})</NavLink></li>
                     <li><NavLink to="/profile">Profile</NavLink></li>
                     <li><NavLink to="/settings">Settings</NavLink></li>
                 </ul>
