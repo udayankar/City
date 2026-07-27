@@ -45,7 +45,7 @@ const Login = () => {
                 return
             }
         }
-    };
+    }
 
     return (
         <div className="login-cont">

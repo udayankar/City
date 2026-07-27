@@ -1,5 +1,5 @@
 from .databse import Base
-from sqlalchemy import Column , String , Integer , ForeignKey , TIMESTAMP
+from sqlalchemy import Column , String , Integer , ForeignKey , TIMESTAMP , UniqueConstraint
 from sqlalchemy.sql import func
 
 class User(Base):
@@ -14,6 +14,7 @@ class Posts(Base):
     ID = Column(Integer , primary_key=True)
     Title = Column(String(200) , nullable=False)
     Content = Column(String , nullable=False)
+    Location = Column(String , nullable=True)
     Author_ID = Column(Integer , ForeignKey("Users.ID" , ondelete="CASCADE") , nullable=False)
     Created_at = Column(TIMESTAMP(timezone=True) , nullable=False , server_default=func.NOW())
 
@@ -23,3 +24,7 @@ class Saved_Posts(Base):
     User_ID = Column(Integer , ForeignKey("Users.ID" , ondelete="CASCADE") , nullable=False)
     Post_ID = Column(Integer , ForeignKey("Posts.ID" , ondelete="CASCADE"))
     Saved_at = Column(TIMESTAMP(timezone=True) , nullable=True , server_default=func.NOW())
+
+    __table_args__ = (
+        UniqueConstraint("User_ID", "Post_ID", name="unique_saved_post"),
+    )

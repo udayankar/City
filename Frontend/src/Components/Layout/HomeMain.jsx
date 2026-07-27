@@ -1,13 +1,15 @@
 import Weather from "../../Utils/WeatherCall";
-import { useContext } from "react";
+import { useContext , useEffect , useState } from "react";
 import { CityContext } from "../../Utils/Context";
 import { alerts } from "../../Data/alerts";
-import { posts } from "../../Data/posts";
 import HomeAlert from "./HomeAlert";
 import HomePost from "./HomePost";
 import { useSelector } from "react-redux";
+import { All_Posts } from "../../Utils/API";
 
 const HomeMain = () => {
+    const [posts , setPosts] = useState([])
+
     const { currentCity } = useContext(CityContext);
     const user = useSelector((store) => store.User);
     const name = user.name;
@@ -30,6 +32,18 @@ const HomeMain = () => {
     } else {
         greeting = "Good Night";
     }
+
+    const handle_posts = async () => {
+        const result = await All_Posts();
+        console.log(result)
+        if (result.success) {
+            setPosts(result.data)
+        }
+    }
+
+    useEffect(() => {
+        handle_posts()
+    } , [])
 
     return (
         <div className="main-cont">
@@ -71,7 +85,7 @@ const HomeMain = () => {
                 </div>
                 <div className="home-foot-list">
                     {posts.map(post => (
-                        <HomePost key={post.id} {...post} toSave={() => dispatch(addItem(event))} notSave={() => dispatch(removeItem(event))}/>
+                        <HomePost key={post.ID} {...post}/>
                     ))}
                 </div>
                 <button className="home-foot-link">View Full Community ➡️</button>

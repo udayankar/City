@@ -115,3 +115,20 @@ export const Unsave_Posts = async (id) => {
     }
 };
 
+export const All_Posts = async () => {
+    try {
+        const response = await fetch("http://localhost:8000/posts" , {
+            credentials : "include"
+        })
+        const data = await response.json()
+        return {
+            success : response.ok,
+            data
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            success : false
+        }
+    }
+};

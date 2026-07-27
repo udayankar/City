@@ -1,6 +1,6 @@
 import jwt
 from jwt.exceptions import InvalidTokenError
-from fastapi import status , Depends , HTTPException , Cookie
+from fastapi import status , Depends , HTTPException , Cookie , Request
 from sqlalchemy.orm import Session
 from datetime import datetime , UTC , timedelta
 from App import models
@@ -44,5 +44,18 @@ def get_current_user(access_token: str = Cookie(None) , db : Session = Depends(g
     if user is None:
         raise credentials_exception
     return user
+
+def get_current_user_optional(request: Request , db: Session = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    if not token:
+        return None
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("Email")
+        if not email:
+            return None
+        return db.query(models.User).filter(models.User.Email == email).first()
+    except Exception:
+        return None
 
 
