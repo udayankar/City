@@ -48,6 +48,7 @@ class ReturnPosts(BaseModel):
     Location : str
     isSaved : bool
     Created_at : datetime
+    isMine : bool
 
     model_config = ConfigDict(from_attributes=True)
 

@@ -1,8 +1,8 @@
 import { useState , useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Edit_Profile as EditProfileAPI , Edit_Password } from "../Utils/API";
+import { Edit_Profile as EditProfileAPI , Edit_Password } from "../../Utils/API";
 import { useDispatch } from "react-redux";
-import { inUser } from "../Utils/UserSlice";
+import { inUser } from "../../Utils/UserSlice";
 
 const Edit_Profile = ({closeEditor}) => {
 

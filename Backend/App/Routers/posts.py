@@ -23,7 +23,8 @@ async def allPosts(response : Response , db : Session = Depends(get_db) , curren
         "Content" : post.Content,
         "Location" : post.Location,
         "isSaved" : post.ID in saved_id,
-        "Created_at" : post.Created_at
+        "Created_at" : post.Created_at,
+        "isMine" : current_user.ID == user.ID
     } for post , user in posts]
 
 @router.post("/me/addpost" , response_model=schemas.ReturnPosts)
@@ -41,3 +42,16 @@ async def addPost(payload : schemas.Post , response : Response , db : Session = 
         "Location" : new_post.Location,
         "Created_at" : new_post.Created_at
     }
+
+@router.get("/me/posts" , response_model=List[schemas.ReturnPosts])
+async def myPosts(response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
+    myposts = db.query(models.Posts).filter(models.Posts.Author_ID == current_user.ID)
+    return [{
+        "ID" : post.ID,
+        "Username" : current_user.Username,
+        "Title" : post.Title,
+        "Content" : post.Content,
+        "Location" : post.Location,
+        "isSaved" : False,
+        "Created_at" : post.Created_at
+    } for post in myposts]

@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { useSelector } from "react-redux";
-import Edit_Profile from "./EditProfile";
+import Edit_Profile from "../Components/Layout/EditProfile";
+import { My_Posts } from "../Utils/API";
+import ProfilePost from "../Components/Layout/ProfilePost";
 
 const Profile = () => {
 
     const [editing, setEditing] = useState(false);
+    const [activeTab, setActiveTab] = useState("posts");
+    const [posts , setPosts] = useState([]);
 
     const closeEditor = () => {
         setEditing(false);
@@ -16,11 +20,27 @@ const Profile = () => {
     const bio = user.bio
     const dp = user.dp
 
+    const handleLogout = () => {
+        dispatch(outUser());
+        navigate("/login");
+    };
+
+    const handle_mypost = async () => {
+        const response = await My_Posts();
+        if (response.success) {
+            setPosts(response.data)
+        }
+    }
+
+    useEffect(() => {
+        handle_mypost()
+    } , []);
+
     return (
         <div className="profile-page">
             <section className="profile-header">
                 <div className="profile-user">
-                    <img className="profile-avatar" src="xyz" alt="Profile"/>
+                    <img className="profile-avatar" src={dp || "xyz"} alt="Profile"/>
                     <div className="profile-info">
                         <h1 className="profile-name">{name}</h1>
                         <p className="profile-email">{email}</p>
@@ -31,7 +51,10 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
-                <button className="profile-edit" onClick={() => setEditing(true)}>Edit Profile</button>
+                <div className="profile-header-actions">
+                    <button className="profile-edit" onClick={() => setEditing(true)}>Edit Profile</button>
+                    <button className="profile-logout">Logout</button>
+                </div>
             </section>
             <section className="profile-stats">
                 <div className="stat-box">
@@ -47,31 +70,17 @@ const Profile = () => {
                     <p>Following</p>
                 </div>
             </section>
-            <section className="my-posts">
-                <h2>My Posts</h2>
-                <article className="profile-post">
-                    <div className="profile-post-top">
-                        <div className="profile-post-user">
-                            <img className="profile-post-avatar" src="xyz" alt="Profile"/>
-                            <div>
-                                <h3 className="profile-post-name">{name}</h3>
-                                <p className="profile-post-location">Kolkata • 2 hours ago</p>
-                            </div>
-                        </div>
-                    </div>
-                    <h3 className="profile-post-title">
-                        Beautiful Evening in Kolkata
-                    </h3>
-                    <p className="profile-post-content">
-                        The city looked amazing today. There were
-                        people everywhere enjoying the evening.
-                    </p>
-                    <div className="profile-post-actions">
-                        <button className="profile-post-action">👍 52</button>
-                        <button className="profile-post-action">💬 12</button>
-                        <button className="profile-post-action">↗ 5</button>
-                    </div>
-                </article>
+            <section className="profile-tabs">
+                <button className={`profile-tab ${activeTab === "posts" ? "active" : ""}`} onClick={() => setActiveTab("posts")}>My Posts
+                </button>
+                <button className={`profile-tab ${activeTab === "saved" ? "active" : ""}`} onClick={() => setActiveTab("saved")}>Saved</button>
+            </section>
+            <section className="profile-content">
+                {activeTab === "posts" && (posts.map((post) => <ProfilePost key={post.ID} {...post}/>))}
+                {activeTab === "saved" && (
+                    <div className="saved-posts">
+                        <p className="empty-profile-message">Your saved posts will appear here.</p>
+                    </div>)}
             </section>
             {editing && <Edit_Profile closeEditor={closeEditor}/>}
         </div>

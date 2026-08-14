@@ -2,9 +2,8 @@ import { useState , useEffect } from "react";
 import { useSelector , useDispatch } from "react-redux";
 import { Save_Posts , Unsave_Posts } from "../../Utils/API";
 import { addItem , removeItem } from "../../Utils/SavedSlice";
-import { data } from "autoprefixer";
 
-const HomePost = ({ID , image , Username , Created_at , Location , Title , Content , likes , comments , shares}) => {
+const HomePost = ({ID , image , Username , Created_at , Location , Title , Content , likes , comments , shares , isMine}) => {
 
     const [isSaved , setIsSaved] = useState(false)
     const user = useSelector((store) => store.User);
@@ -59,7 +58,7 @@ const HomePost = ({ID , image , Username , Created_at , Location , Title , Conte
         };
 
     return (
-        <div className="home-post">
+        <div className={`home-post ${isMine ? "my-post" : "other-post"}`}>
             <div className="home-post-top">
                 <div className="home-post-user">
                     <img src={image} className="home-post-dp"/>

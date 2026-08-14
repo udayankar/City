@@ -161,6 +161,24 @@ export const All_Posts = async () => {
     }
 };
 
+export const My_Posts = async () => {
+    try {
+        const response = await fetch("http://localhost:8000/me/posts" , {
+            credentials : "include"
+        })
+        const data = await response.json()
+        return {
+            success : response.ok,
+            data
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            success : false,
+            error
+        }
+    }
+};
 
 export const Edit_Profile = async (payload) => {
     try {
