@@ -1,4 +1,4 @@
-from fastapi import status , HTTPException , Response , Depends , APIRouter , Request
+from fastapi import status , HTTPException , Response , Depends , APIRouter
 from sqlalchemy.orm import Session
 from typing import List
 from .. import models
@@ -9,7 +9,7 @@ from ..oauth2 import get_current_user_optional , get_current_user
 router = APIRouter(tags=["Posts"])
 
 @router.get("/posts" , response_model=List[schemas.ReturnPosts])
-async def allPosts(response : Response , request : Request , db : Session = Depends(get_db) , current_user = Depends(get_current_user_optional)):
+async def allPosts(response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user_optional)):
     posts = db.query(models.Posts , models.User).join(models.User , models.Posts.Author_ID == models.User.ID).order_by(models.Posts.Created_at.desc()).all()
     saved_id = set()
     if current_user:

@@ -11,8 +11,20 @@ class SignupUser(BaseModel):
 class ReturnSignupUser(BaseModel):
     Username : str
     Email : EmailStr
+    Bio : Optional[str] = None
+    DP : Optional[str] = None
+    Created_at : datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+class UpdateUser(BaseModel):
+    Username : Optional[str] = None
+    Bio : Optional[str] = None
+    DP : Optional[str] = None
+
+class UpdatePassword(BaseModel):
+    CurrPass : str
+    NewPass : str
 
 class LoginUser(BaseModel):
     Email : EmailStr

@@ -9,7 +9,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [MailTxt , setMailTxt] = useState("");
     const [PassTxt , setPassTxt] = useState("");
-    const [error , setError] = useState("")
+    const [error , setError] = useState("");
 
     const clearInputs = () => {
         setMailTxt("");
@@ -32,7 +32,7 @@ const Login = () => {
                 credentials: "include"
             });
             const currentUser = await response.json();
-            dispatch(inUser({name: currentUser.Username , email: currentUser.Email}));
+            dispatch(inUser({name: currentUser.Username , email: currentUser.Email , bio: currentUser.Bio , dp: currentUser.DP}));
             navigate("/");
         } else {
             clearInputs();

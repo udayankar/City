@@ -63,7 +63,7 @@ const Navbar = () => {
                     </button>
                     { showMenu && (
                     <ul className="user-menu">
-                        <li className="menu-item" onClick={() => {setShowMenu(false)}}>Profile</li>
+                        <NavLink className="profile-link" to="/profile"><li className="menu-item" onClick={() => {setShowMenu(false)}}>Profile</li></NavLink>
                         <li className="menu-item" onClick={() => {setShowMenu(false)}}>Settings</li>
                         <li className="menu-item" onClick={handle_logout}>Sign Out</li>
                     </ul> )}

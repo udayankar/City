@@ -5,6 +5,8 @@ import events from "../../Data/events";
 import HomeEvent from "./HomeEvent";
 import { useDispatch } from "react-redux";
 import { addItem , removeItem } from "../../Utils/SavedSlice";
+import CityMap from "../Maps/citymap";
+import { CityCoordinates } from "../../Assets/CityCoordinates";
 
 const HomeRight = () => {
     const {currentCity , setCurrentCity} = useContext(CityContext);
@@ -17,7 +19,9 @@ const HomeRight = () => {
                     <span className="explore-head">Explore and Navigate</span>
                     <span className="explore-extend">View Full Map</span>
                 </div>
-                <iframe src={Map_URL[currentCity]} width="600" height="450" style={{border:0}} allowFullScreen="" loading="lazy" referrerPolicy="strict-origin-when-cross-origin"></iframe>
+                <div className="map-container">
+                    <CityMap key={currentCity} center={CityCoordinates[currentCity]}/>
+                </div>
                 <div className="explore-tag">
                     <button className="explore-park">🌲 Parks</button>
                     <button className="explore-toilet">🚻 Toilets</button>

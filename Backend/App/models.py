@@ -8,6 +8,9 @@ class User(Base):
     Username = Column(String(200) , nullable=False)
     Email = Column(String(200) , nullable=False , unique=True , index=True)
     Password = Column(String(200) , nullable=False)
+    Bio = Column(String(200) , nullable=True)
+    DP = Column(String , nullable=True)
+    Created_at = Column(TIMESTAMP(timezone=True) , nullable=False , server_default=func.NOW())
 
 class Posts(Base):
     __tablename__ = "Posts"

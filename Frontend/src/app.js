@@ -1,39 +1,41 @@
-import { useContext, useState , useEffect } from "react";
+import { createBrowserRouter , RouterProvider , Outlet } from "react-router-dom";
+import { useContext, useState , useEffect , lazy , suspense, Suspense } from "react";
+import { Provider } from "react-redux"; 
 import { createRoot } from "react-dom/client";
-import { CityContext } from "./Utils/Context";
-import AppStore from "./Utils/AppStore";
-import { Provider , useSelector , useDispatch } from "react-redux"; 
+import { useDispatch } from "react-redux";
 import { inUser , outUser } from "./Utils/UserSlice";
+import { CityContext } from "./Utils/Context";
+import { checkLogin } from "./Utils/API";
+import AppStore from "./Utils/AppStore";
+import "leaflet/dist/leaflet.css";
 import "./style.css";
 import Navbar from "./Components/Layout/Navbar";
 import Sidebar from "./Components/Layout/Sidebar";
 import Rightbar from "./Components/Layout/HomeRight";
-import Login from "./Pages/Login";
-import Signup from "./Pages/Signup";
 import Home from "./Pages/Home";
-import { createBrowserRouter , RouterProvider , Outlet } from "react-router-dom";
+
+const Login = lazy(() => import("./Pages/Login"));
+const Signup = lazy(() => import("./Pages/Signup"));
+const Profile = lazy(() => import("./Pages/Profile"));
+
 
 const App = () => {
-    const [currentCity, setCurrentCity] = useState("Select your city");
-    const dispatch = useDispatch();
+    const [currentCity, setCurrentCity] = useState("Rohtak");
+
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        async function checkLogin() {
-            const response = await fetch("http://localhost:8000/users/me", {
-                credentials: "include"
-            });
-            if (response.ok) {
-                const user = await response.json();
-                dispatch(inUser({
-                    name: user.Username,
-                    email: user.Email
-                }));
+        const verifyLogin = async () => {
+            const result = await checkLogin();
+            if (result.success) {
+                const user = result.data;
+                dispatch(inUser({name: user.Username , email: user.Email , bio: user.Bio , dp: user.DP}));
             } else {
                 dispatch(outUser());
             }
-        }
-        checkLogin();
-    }, []);
+        };
+    verifyLogin();
+    } , [dispatch]);
 
     return (
         <CityContext.Provider value={{currentCity , setCurrentCity}}>
@@ -41,10 +43,23 @@ const App = () => {
                 <Sidebar />
                 <div className="main-layout">
                     <Navbar />
-                    <Outlet/>
+                    <Suspense fallback={<h2>Loading...</h2>}>
+                        <Outlet/>
+                    </Suspense>
                 </div>
             </div>
         </CityContext.Provider>
+    );
+};
+
+const ProfileLayout = () => {
+    return (
+        <div className="app-layout">
+            <Sidebar />
+            <Suspense fallback={<h2>Hey There</h2>}>
+                <Profile />
+            </Suspense>
+        </div>
     );
 };
 
@@ -61,11 +76,21 @@ const AppRouter = createBrowserRouter([
     },
     {
         path: "/login",
-        element: <Login/>
+        element: 
+            <Suspense fallback={<h2>Wait a min...</h2>}>
+                <Login/>
+            </Suspense>
     },
     {
      path: "/signup",
-     element: <Signup/>   
+     element: 
+        <Suspense fallback={<h2>Just a sec...</h2>}>
+            <Signup/> 
+        </Suspense>  
+    },
+    {
+        path: "/profile",
+        element: <ProfileLayout/>
     }
 ]);
 

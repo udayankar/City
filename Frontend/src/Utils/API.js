@@ -56,6 +56,34 @@ export const LoginUser = async (email, password) => {
     }
 };
 
+export const checkLogin = async () => {
+    try {
+        const response = await fetch(
+            "http://localhost:8000/users/me",
+            {
+                credentials: "include"
+            }
+        );
+        if (!response.ok) {
+            return {
+                success: false,
+                data: null
+            };
+        }
+        const user = await response.json();
+        return {
+            success: true,
+            data: user
+        };
+    } catch (error) {
+        console.log(error);
+        return {
+            success: false,
+            data: null
+        };
+    }
+};
+
 export const Saved = async () => {
     try {
         const response = await fetch("http://localhost:8000/saved" , {
@@ -129,6 +157,47 @@ export const All_Posts = async () => {
         console.log(error)
         return {
             success : false
+        }
+    }
+};
+
+
+export const Edit_Profile = async (payload) => {
+    try {
+        const response = await fetch("http://localhost:8000/users/me/profile" , {
+            method : "PUT",
+            credentials : "include",
+            headers : {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+        return {
+            success : response.ok
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            success : false
+        }
+    }
+};
+
+export const Edit_Password = async (payload) => {
+    try {
+        const response = await fetch("http://localhost:8000/users/me/password" , {
+            method : "PUT",
+            credentials : "include",
+            headers : {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+        return {success : response.ok}
+    } catch (error) {
+        return {
+            success : false,
+            error
         }
     }
 };
