@@ -1145,20 +1145,26 @@ body{
 }
 
 .home-foot-link{
-    padding: 18px;
-    border: none;
-    border-top: 1px solid #ececec;
-    background: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
-    color: #5B4CF6;
-    cursor: pointer;
-    transition: .25s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    box-sizing:border-box;
+    padding:18px;
+    border-top:1px solid #ececec;
+    background:#ffffff;
+    font-size:15px;
+    font-weight:600;
+    color:#5B4CF6;
+    text-decoration:none;
+    cursor:pointer;
+    transition:.25s;
 }
 
 .home-foot-link:hover{
-    background: #f7f6ff;
-    letter-spacing: .3px;
+    background:#f7f6ff;
+    color:#5B4CF6;
+    letter-spacing:.3px;
 }
 
 .login-cont{
@@ -2332,4 +2338,141 @@ body{
     .menu-control-button{
         padding:0 8px;
     }
+}
+
+.guest-profile{
+    min-height:calc(100vh - 72px);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:20px 40px;
+    background:#f7f8fc;
+}
+
+.guest-profile-icon{
+    width:72px;
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#f0eeff;
+    color:#5B4CF6;
+    font-size:30px;
+    margin-bottom:20px;
+}
+
+.guest-profile-title{
+    font-size:28px;
+    font-weight:700;
+    color:#2f2f2f;
+    margin-bottom:10px;
+}
+
+.guest-profile-text{
+    max-width:500px;
+    text-align:center;
+    line-height:1.6;
+    color:#777;
+    font-size:15px;
+    margin-bottom:25px;
+}
+
+.guest-benefits{
+    width:100%;
+    max-width:620px;
+    padding:24px;
+    background:#ffffff;
+    border:1px solid #ececec;
+    border-radius:16px;
+    box-shadow:0 8px 24px rgba(0,0,0,.05);
+}
+
+.guest-benefits h2{
+    font-size:17px;
+    color:#2f2f2f;
+    margin-bottom:18px;
+}
+
+.guest-benefit{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:14px 0;
+    border-top:1px solid #f0f0f0;
+}
+
+.guest-benefit > span{
+    width:38px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    background:#f5f4ff;
+    font-size:17px;
+}
+
+.guest-benefit h3{
+    font-size:14px;
+    font-weight:600;
+    color:#333;
+    margin-bottom:3px;
+}
+
+.guest-benefit p{
+    font-size:13px;
+    color:#888;
+}
+
+.guest-profile-actions{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:40px;
+}
+
+.guest-login , .guest-signup{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-width:130px;
+    padding:12px 24px;
+    border-radius:11px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    transition:all .25s ease;
+}
+
+.guest-login{
+    background:#ffffff;
+    border:1px solid #5B4CF6;
+    color:#5B4CF6;
+}
+
+.guest-login:hover{
+    background:#f4f3ff;
+    color:#4b3ee0;
+}
+
+.guest-signup{
+    background:#5B4CF6;
+    border:1px solid #5B4CF6;
+    color:#ffffff;
+}
+
+.guest-signup:hover{
+    background:#4b3ee0;
+    border-color:#4b3ee0;
+    box-shadow:0 8px 18px rgba(91,76,246,.25);
+}
+
+.guest-login:visited , .guest-signup:visited{
+    text-decoration:none;
+}
+
+.guest-login:active , .guest-signup:active{
+    transform:translateY(1px);
 }

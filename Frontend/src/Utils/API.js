@@ -143,9 +143,9 @@ export const Unsave_Posts = async (id) => {
     }
 };
 
-export const All_Posts = async () => {
+export const All_Posts = async (search) => {
     try {
-        const response = await fetch("http://localhost:8000/posts" , {
+        const response = await fetch(`http://localhost:8000/posts?search=${search}` , {
             credentials : "include"
         })
         const data = await response.json()

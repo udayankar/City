@@ -6,6 +6,7 @@ import HomeAlert from "./HomeAlert";
 import HomePost from "./HomePost";
 import { useSelector } from "react-redux";
 import { All_Posts } from "../../Utils/API";
+import { NavLink } from "react-router-dom";
 
 const HomeMain = () => {
     const [posts , setPosts] = useState([])
@@ -34,7 +35,7 @@ const HomeMain = () => {
     }
 
     const handle_posts = async () => {
-        const result = await All_Posts();
+        const result = await All_Posts("");
         console.log(result)
         if (result.success) {
             setPosts(result.data)
@@ -88,7 +89,7 @@ const HomeMain = () => {
                         <HomePost key={post.ID} {...post}/>
                     ))}
                 </div>
-                <button className="home-foot-link">View Full Community ➡️</button>
+                <NavLink to="/community" className="home-foot-link">View Full Community ➡️</NavLink>
             </div>
         </div>
     )

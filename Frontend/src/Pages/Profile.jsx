@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import Edit_Profile from "../Components/Layout/EditProfile";
 import { My_Posts } from "../Utils/API";
 import ProfilePost from "../Components/Layout/ProfilePost";
+import GuestProfile from "../Components/Layout/GuestProfile";
+import { outUser } from "../Utils/UserSlice";
 
 const Profile = () => {
 
@@ -19,6 +21,7 @@ const Profile = () => {
     const email= user.email
     const bio = user.bio
     const dp = user.dp
+    const isLoggedin = user.isLoggedIn
 
     const handleLogout = () => {
         dispatch(outUser());
@@ -35,6 +38,10 @@ const Profile = () => {
     useEffect(() => {
         handle_mypost()
     } , []);
+
+    if (!isLoggedin) {
+        return <GuestProfile/>
+    }
 
     return (
         <div className="profile-page">

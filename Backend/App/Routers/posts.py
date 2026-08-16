@@ -1,5 +1,6 @@
 from fastapi import status , HTTPException , Response , Depends , APIRouter
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from typing import List
 from .. import models
 from .. import schemas
@@ -9,8 +10,9 @@ from ..oauth2 import get_current_user_optional , get_current_user
 router = APIRouter(tags=["Posts"])
 
 @router.get("/posts" , response_model=List[schemas.ReturnPosts])
-async def allPosts(response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user_optional)):
-    posts = db.query(models.Posts , models.User).join(models.User , models.Posts.Author_ID == models.User.ID).order_by(models.Posts.Created_at.desc()).all()
+async def allPosts(response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user_optional) , search : str = ""):
+    posts = db.query(models.Posts , models.User).join(models.User , models.Posts.Author_ID == models.User.ID).filter(or_(models.Posts.Title.ilike(f"%{search}%") , models.Posts.Content.ilike(f"%{search}%")
+    )).order_by(models.Posts.Created_at.desc()).all()
     saved_id = set()
     if current_user:
         saved = db.query(models.Saved_Posts.Post_ID).filter(models.Saved_Posts.User_ID == current_user.ID).all()
@@ -24,7 +26,7 @@ async def allPosts(response : Response , db : Session = Depends(get_db) , curren
         "Location" : post.Location,
         "isSaved" : post.ID in saved_id,
         "Created_at" : post.Created_at,
-        "isMine" : current_user.ID == user.ID
+        "isMine" : current_user.ID == user.ID if current_user else False
     } for post , user in posts]
 
 @router.post("/me/addpost" , response_model=schemas.ReturnPosts)

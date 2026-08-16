@@ -6,20 +6,31 @@ const Community = () => {
 
     const [activeTab, setActiveTab] = useState("all");
     const [sortOpen, setSortOpen] = useState(false);
+    const [currentsort , setCurrentsort] = useState("Recent");
     const [filterOpen, setFilterOpen] = useState(false);
+    const [currrentfilter , setCurrentfilter] = useState("None");
+    const [searchtxt , setSearchtxt] = useState("");
     const [posts , setPosts] = useState([]);
 
     const handle_posts = async () => {
-            const result = await All_Posts();
+            const result = await All_Posts(searchtxt);
             console.log(result)
             if (result.success) {
                 setPosts(result.data)
             }
         }
+
+    const handle_search = () => {
+        if (searchtxt.length > 0) {
+            setSearchtxt("")
+        } else {
+            return
+        }
+    };
     
     useEffect(() => {
         handle_posts()
-    } , [])
+    } , [searchtxt])
 
     return (
         <div className="comm-page">
@@ -30,8 +41,8 @@ const Community = () => {
                 </div>
                 <div className="comm-head-actions">
                     <div className="post-search">
-                        <input className="post-search-txt" type="text" placeholder="Search posts..."/>
-                        <button className="post-search-butt">🔍</button>
+                        <input className="post-search-txt" type="text" placeholder="Search posts..." value={searchtxt} onChange={(e) => setSearchtxt(e.target.value)}/>
+                        <button className="post-search-butt" onClick={() => handle_search()}>{searchtxt.length > 0 ? "❌" : "🔍"}</button>
                     </div>
                     <button className="post-create-butt">
                         <span>＋</span>
@@ -49,31 +60,30 @@ const Community = () => {
                     <div className="menu-control">
                         <button className="menu-control-button" onClick={() => {setSortOpen(!sortOpen); setFilterOpen(false);}}>
                             <span>Sort</span>
-                            <strong>Recent</strong>
+                            <strong>{currentsort}</strong>
                             <span className="control-arrow">⬇️</span>
                         </button>
                         {sortOpen && (
                             <ul className="control-dropdown">
-                                <li>Recent</li>
-                                <li>Most Liked</li>
-                                <li>Most Commented</li>
-                                <li>Most Shared</li>
+                                <li onClick={() => {setCurrentsort("Recent"); setSortOpen(!sortOpen)}}>Recent</li>
+                                <li onClick={() => {setCurrentsort("Most Liked"); setSortOpen(!sortOpen)}}>Most Liked</li>
+                                <li onClick={() => {setCurrentsort("Most Commented"); setSortOpen(!sortOpen)}}>Most Commented</li>
+                                <li onClick={() => {setCurrentsort("Most Shared"); setSortOpen(!sortOpen)}}>Most Shared</li>
                             </ul>)}
                     </div>
                     <div className="menu-control">
                         <button className="menu-control-button" onClick={() => {setFilterOpen(!filterOpen);setSortOpen(false);}}>
                             <span>Filter</span>
-                            <strong>None</strong>
+                            <strong>{currrentfilter}</strong>
                             <span className="control-arrow">⬇️</span>
                         </button>
                         {filterOpen && (
                             <ul className="control-dropdown">
-                                <li>None</li>
-                                <li>Food</li>
-                                <li>Events</li>
-                                <li>Traffic</li>
-                                <li>Government</li>
-                                <li>Recommendations</li>
+                                <li onClick={() => {setFilterOpen(!filterOpen); setCurrentfilter("None")}}>None</li>
+                                <li onClick={() => {setFilterOpen(!filterOpen); setCurrentfilter("Food")}}>Food</li>
+                                <li onClick={() => {setFilterOpen(!filterOpen); setCurrentfilter("Events")}}>Events</li>
+                                <li onClick={() => {setFilterOpen(!filterOpen); setCurrentfilter("Traffic")}}>Traffic</li>
+                                <li onClick={() => {setFilterOpen(!filterOpen); setCurrentfilter("Recommendations")}}>Recommendations</li>
                             </ul>)}
                     </div>
                 </div>
