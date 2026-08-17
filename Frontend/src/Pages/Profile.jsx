@@ -1,7 +1,7 @@
 import { useState , useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector , useDispatch } from "react-redux";
 import Edit_Profile from "../Components/Layout/EditProfile";
-import { My_Posts } from "../Utils/API";
+import { My_Posts , Log} from "../Utils/API";
 import ProfilePost from "../Components/Layout/ProfilePost";
 import GuestProfile from "../Components/Layout/GuestProfile";
 import { outUser } from "../Utils/UserSlice";
@@ -17,16 +17,20 @@ const Profile = () => {
     };
 
     const user = useSelector((store) => store.User);
+    const dispatch = useDispatch();
     const name = user.name
     const email= user.email
     const bio = user.bio
     const dp = user.dp
     const isLoggedin = user.isLoggedIn
 
-    const handleLogout = () => {
-        dispatch(outUser());
-        navigate("/login");
-    };
+    const handle_logout = async () => {
+        await fetch("http://localhost:8000/users/logout", {
+            method: "POST",
+            credentials: "include"
+        });
+        dispatch(outUser())
+    }
 
     const handle_mypost = async () => {
         const response = await My_Posts();
@@ -60,7 +64,7 @@ const Profile = () => {
                 </div>
                 <div className="profile-header-actions">
                     <button className="profile-edit" onClick={() => setEditing(true)}>Edit Profile</button>
-                    <button className="profile-logout">Logout</button>
+                    <button className="profile-logout" onClick={handle_logout}>Logout</button>
                 </div>
             </section>
             <section className="profile-stats">

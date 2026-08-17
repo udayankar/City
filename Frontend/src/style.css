@@ -2476,3 +2476,334 @@ body{
 .guest-login:active , .guest-signup:active{
     transform:translateY(1px);
 }
+
+.create-post-overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:1000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    box-sizing:border-box;
+    background:rgba(30, 30, 40, 0.45);
+}
+
+.create-post-card{
+    width:100%;
+    max-width:620px;
+    max-height:90vh;
+    overflow-y:auto;
+    background:#ffffff;
+    border:1px solid #e8e8e8;
+    border-radius:16px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.16);
+    box-sizing:border-box;
+}
+
+.create-post-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 24px;
+    border-bottom:1px solid #eeeeee;
+}
+
+.create-post-header h2{
+    margin:0;
+    font-size:21px;
+    font-weight:700;
+    color:#333333;
+}
+
+.create-post-header p{
+    margin:5px 0 0;
+    font-size:13px;
+    color:#888888;
+}
+
+.create-post-close{
+    width:34px;
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:none;
+    border-radius:50%;
+    background:#f5f5f5;
+    color:#666666;
+    font-size:14px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.create-post-close:hover{
+    background:#eeeeee;
+    color:#333333;
+}
+
+.create-post-form{
+    padding:22px 24px 24px;
+}
+
+.create-post-user{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding-bottom:18px;
+    border-bottom:1px solid #eeeeee;
+}
+
+.create-post-user-dp{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#f2f2f2;
+}
+
+.create-post-user-info{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+.create-post-user-name{
+    font-size:14px;
+    font-weight:600;
+    color:#333333;
+}
+
+.create-post-user-location{
+    font-size:11px;
+    color:#999999;
+}
+
+.create-post-field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:18px;
+}
+
+.create-post-field label{
+    font-size:13px;
+    font-weight:600;
+    color:#444444;
+}
+
+.create-post-label-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.create-post-label-row span{
+    font-size:11px;
+    color:#999999;
+}
+
+.create-post-optional{
+    margin-left:6px;
+    font-size:11px;
+    font-weight:400;
+    color:#999999;
+}
+
+.create-post-field input , .create-post-field textarea , .create-post-field select{
+    width:100%;
+    box-sizing:border-box;
+    border:1px solid #e2e2e2;
+    border-radius:9px;
+    background:#ffffff;
+    color:#333333;
+    font-family:Arial, sans-serif;
+    font-size:13px;
+    outline:none;
+    transition:.2s;
+}
+
+.create-post-field input , .create-post-field select{
+    height:42px;
+    padding:0 12px;
+}
+
+.create-post-field textarea{
+    min-height:120px;
+    padding:12px;
+    resize:vertical;
+    line-height:1.5;
+}
+
+.create-post-field input::placeholder , .create-post-field textarea::placeholder{
+    color:#aaaaaa;
+}
+
+.create-post-field input:focus , .create-post-field textarea:focus , .create-post-field select:focus{
+    border-color:#5B4CF6;
+    box-shadow:0 0 0 2px rgba(91,76,246,.08);
+}
+
+.create-post-options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.create-post-location{
+    position:relative;
+    display:flex;
+    align-items:center;
+}
+
+.create-post-location > span{
+    position:absolute;
+    left:12px;
+    font-size:13px;
+}
+
+.create-post-location input{
+    padding-left:35px;
+}
+
+.create-post-image{
+    width:100%;
+    min-height:70px;
+    display:flex;
+    align-items:center;
+    box-sizing:border-box;
+    padding:12px;
+    border:1px dashed #d4d4d4;
+    border-radius:9px;
+    background:#fafafa;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.create-post-image:hover{
+    border-color:#5B4CF6;
+    background:#f8f7ff;
+}
+
+.create-post-image input{
+    display:none;
+}
+
+.create-post-upload{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.create-post-upload-icon{
+    width:36px;
+    height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    background:#f0efff;
+    font-size:17px;
+}
+
+.create-post-upload div{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.create-post-upload strong{
+    font-size:12px;
+    color:#444444;
+}
+
+.create-post-upload span{
+    font-size:10px;
+    color:#999999;
+}
+
+.create-post-selected-image{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:12px;
+    color:#555555;
+}
+
+.create-post-selected-image span:last-child{
+    color:#5B4CF6;
+    font-weight:600;
+}
+
+
+.create-post-actions{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:22px;
+    padding-top:18px;
+    border-top:1px solid #eeeeee;
+}
+
+.create-post-cancel , .create-post-submit{
+    height:40px;
+    padding:0 17px;
+    border-radius:9px;
+    font-family:Arial, sans-serif;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.create-post-cancel{
+    border:1px solid #e2e2e2;
+    background:#ffffff;
+    color:#555555;
+}
+
+.create-post-cancel:hover{
+    background:#f7f7f7;
+}
+
+.create-post-submit{
+    border:1px solid #5B4CF6;
+    background:#5B4CF6;
+    color:#ffffff;
+}
+
+.create-post-submit:hover:not(:disabled){
+    background:#4b3ee0;
+    box-shadow:0 5px 12px rgba(91,76,246,.18);
+}
+
+.create-post-submit:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+
+@media(max-width:650px){
+    .create-post-overlay{
+        padding:12px;
+    }
+    .create-post-card{
+        max-height:94vh;
+
+        border-radius:14px;
+    }
+    .create-post-header{
+        padding:17px 18px;
+    }
+    .create-post-form{
+        padding:18px;
+    }
+    .create-post-options{
+        grid-template-columns:1fr;
+        gap:0;
+    }
+}

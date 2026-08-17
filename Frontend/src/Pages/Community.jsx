@@ -1,16 +1,25 @@
 import { useState , useEffect } from "react";
 import HomePost from "../Components/Layout/HomePost";
+import CreatePost from "../Components/Layout/CreatePost";
 import { All_Posts } from "../Utils/API";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Community = () => {
 
     const [activeTab, setActiveTab] = useState("all");
+    const [createPostOpen , setCreatePostOpen] = useState(false);
     const [sortOpen, setSortOpen] = useState(false);
     const [currentsort , setCurrentsort] = useState("Recent");
     const [filterOpen, setFilterOpen] = useState(false);
     const [currrentfilter , setCurrentfilter] = useState("None");
     const [searchtxt , setSearchtxt] = useState("");
     const [posts , setPosts] = useState([]);
+
+    const navigate = useNavigate();
+    const user = useSelector((store) => store.User);
+    const name = user.name;
+    const isLoggedin = user.isLoggedIn;
 
     const handle_posts = async () => {
             const result = await All_Posts(searchtxt);
@@ -44,7 +53,7 @@ const Community = () => {
                         <input className="post-search-txt" type="text" placeholder="Search posts..." value={searchtxt} onChange={(e) => setSearchtxt(e.target.value)}/>
                         <button className="post-search-butt" onClick={() => handle_search()}>{searchtxt.length > 0 ? "❌" : "🔍"}</button>
                     </div>
-                    <button className="post-create-butt">
+                    <button className="post-create-butt" onClick={() => {if (isLoggedin) {setCreatePostOpen(true);} else {navigate("/login");}}}>
                         <span>＋</span>
                         Create Post
                     </button>
@@ -91,6 +100,7 @@ const Community = () => {
             <main className="comm-main">
                 {posts.map((post) => (<HomePost key={post.ID} {...post}/>))}
             </main>
+            {createPostOpen && (<CreatePost onClose={() => setCreatePostOpen(false)}/>)}
         </div>
     );
 };
