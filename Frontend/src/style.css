@@ -2589,6 +2589,10 @@ body{
     margin-top:18px;
 }
 
+.create-post-field input{
+    caret-color: black;
+}
+
 .create-post-field label{
     font-size:13px;
     font-weight:600;
@@ -2636,6 +2640,7 @@ body{
     padding:12px;
     resize:vertical;
     line-height:1.5;
+    caret-color: black;
 }
 
 .create-post-field input::placeholder , .create-post-field textarea::placeholder{
@@ -2645,12 +2650,6 @@ body{
 .create-post-field input:focus , .create-post-field textarea:focus , .create-post-field select:focus{
     border-color:#5B4CF6;
     box-shadow:0 0 0 2px rgba(91,76,246,.08);
-}
-
-.create-post-options{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px;
 }
 
 .create-post-location{
@@ -2667,78 +2666,8 @@ body{
 
 .create-post-location input{
     padding-left:35px;
+    caret-color: black;
 }
-
-.create-post-image{
-    width:100%;
-    min-height:70px;
-    display:flex;
-    align-items:center;
-    box-sizing:border-box;
-    padding:12px;
-    border:1px dashed #d4d4d4;
-    border-radius:9px;
-    background:#fafafa;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.create-post-image:hover{
-    border-color:#5B4CF6;
-    background:#f8f7ff;
-}
-
-.create-post-image input{
-    display:none;
-}
-
-.create-post-upload{
-    display:flex;
-    align-items:center;
-    gap:11px;
-}
-
-.create-post-upload-icon{
-    width:36px;
-    height:36px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:8px;
-    background:#f0efff;
-    font-size:17px;
-}
-
-.create-post-upload div{
-    display:flex;
-    flex-direction:column;
-    gap:2px;
-}
-
-.create-post-upload strong{
-    font-size:12px;
-    color:#444444;
-}
-
-.create-post-upload span{
-    font-size:10px;
-    color:#999999;
-}
-
-.create-post-selected-image{
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    font-size:12px;
-    color:#555555;
-}
-
-.create-post-selected-image span:last-child{
-    color:#5B4CF6;
-    font-weight:600;
-}
-
 
 .create-post-actions{
     display:flex;
@@ -2806,4 +2735,26 @@ body{
         grid-template-columns:1fr;
         gap:0;
     }
+}
+
+.create-success{
+    margin: 0 24px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    background: #eefbf3;
+    border: 1px solid #ccebd8;
+    color: #247a45;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.create-error{
+    margin: 0 24px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    background: #fff1f1;
+    border: 1px solid #f3cccc;
+    color: #c43d3d;
+    font-size: 14px;
+    font-weight: 500;
 }

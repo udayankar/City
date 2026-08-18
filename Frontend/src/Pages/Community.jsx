@@ -39,7 +39,7 @@ const Community = () => {
     
     useEffect(() => {
         handle_posts()
-    } , [searchtxt])
+    } , [searchtxt , isLoggedin])
 
     return (
         <div className="comm-page">
@@ -100,7 +100,7 @@ const Community = () => {
             <main className="comm-main">
                 {posts.map((post) => (<HomePost key={post.ID} {...post}/>))}
             </main>
-            {createPostOpen && (<CreatePost onClose={() => setCreatePostOpen(false)}/>)}
+            {createPostOpen && (<CreatePost onClose={() => setCreatePostOpen(false)} onPostCreated={handle_posts}/>)}
         </div>
     );
 };

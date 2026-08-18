@@ -1,36 +1,36 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Add_Post } from "../../Utils/API";
 
-const CreatePost = ({ onClose }) => {
+const CreatePost = ({ onClose , onPostCreated }) => {
 
     const user = useSelector((store) => store.User);
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [location, setLocation] = useState("");
-    const [category, setCategory] = useState("General");
-    const [image, setImage] = useState(null);
+    const [createMessage, setCreateMessage] = useState("");
+    const [createError, setCreateError] = useState(false);
 
     const maxCharacters = 500;
 
-    const handleImage = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImage(file);
-        }
-    };
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // API call will be added here
-        console.log({
-            title,
-            content,
-            location,
-            category,
-            image
-        });
+        const response = await Add_Post(title , content , location);
+        if (response) {
+            setCreateError(false);
+            setCreateMessage("Post published successfully!");
+            setTitle("");
+            setContent("");
+            setLocation("");
+            await onPostCreated();
+        } else {
+            setCreateError(true);
+            setCreateMessage("Failed to publish post. Please try again.");
+        }
+        setTimeout(() => {
+                setCreateMessage("");
+        }, 3000);
     };
 
     return (
@@ -44,6 +44,7 @@ const CreatePost = ({ onClose }) => {
                     <button className="create-post-close" onClick={onClose}
                     >❌</button>
                 </div>
+                {createMessage && (<p className={createError ? "create-error" : "create-success"}>{createMessage}</p>)}
                 <form className="create-post-form" onSubmit={handleSubmit}>
                     <div className="create-post-user">
                         <img src={user.DP} className="create-post-user-dp" alt="Profile"/>
@@ -71,40 +72,6 @@ const CreatePost = ({ onClose }) => {
                                 <input type="text" placeholder="Where is this about?" value={location} onChange={(e) => setLocation(e.target.value)}/>
                             </div>
                         </div>
-                        <div className="create-post-field">
-                            <label>Category</label>
-                            <select value={category} onChange={(e) => setCategory(e.target.value)}>
-                                <option>General</option>
-                                <option>Events</option>
-                                <option>Food</option>
-                                <option>Traffic</option>
-                                <option>Government</option>
-                                <option>Recommendations</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div className="create-post-field">
-                        <label>
-                            Image
-                            <span className="create-post-optional">Optional</span>
-                        </label>
-                        <label className="create-post-image">
-                            <input type="file" accept="image/*" onChange={handleImage}/>
-                            {image ? (
-                                <div className="create-post-selected-image">
-                                    <span>🖼️ {image.name}</span>
-                                    <span> Change</span>
-                                </div>
-                            ) : (
-                                <div className="create-post-upload">
-                                    <span className="create-post-upload-icon">🖼️</span>
-                                    <div>
-                                        <strong>Add an image</strong>
-                                        <span>JPG, PNG or WEBP</span>
-                                    </div>
-                                </div>
-                            )}
-                        </label>
                     </div>
                     <div className="create-post-actions">
                         <button type="button" className="create-post-cancel" onClick={onClose}>Cancel</button>

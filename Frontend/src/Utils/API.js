@@ -180,6 +180,33 @@ export const My_Posts = async () => {
     }
 };
 
+export const Add_Post = async (title , content , location) => {
+    try {
+        const response = await fetch("http://localhost:8000/me/addpost" , {
+            method : "POST",
+            credentials : "include",
+            headers : {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                Title : title,
+                Content : content,
+                Location : location
+            })
+        })
+        const data = await response.json()
+        return {
+            success : response.ok,
+            data
+        }
+    } catch (error) {
+        return {
+            success : false,
+            error
+        }
+    }
+};
+
 export const Edit_Profile = async (payload) => {
     try {
         const response = await fetch("http://localhost:8000/users/me/profile" , {

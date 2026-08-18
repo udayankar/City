@@ -22,9 +22,6 @@ async def editProfile(payload : UpdateUser , response : Response , db : Session 
 
 @router.put("/password")
 async def editPassword(payload : UpdatePassword , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
-    print("Current password received:", bool(payload.CurrPass))
-    print("Current password length:", len(payload.CurrPass))
-    print("Stored hash:", current_user.Password)
     if not verify_password(payload.CurrPass, current_user.Password) :
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="Current password is incorrect")
     current_user.Password = hashed_password(payload.NewPass)
