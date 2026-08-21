@@ -47,6 +47,8 @@ class ReturnPosts(BaseModel):
     Content : str
     Location : str
     isSaved : bool
+    isLiked : bool
+    Likes : int
     Created_at : datetime
     isMine : bool
 

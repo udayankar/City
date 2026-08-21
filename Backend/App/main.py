@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .databse import engine
 from . import models
-from .Routers import signup , auth , saved , posts , profile
+from .Routers import signup , auth , saved , posts , profile , liked
 
 app = FastAPI()
 app.add_middleware(
@@ -17,6 +17,7 @@ app.include_router(auth.router)
 app.include_router(saved.router)
 app.include_router(posts.router)
 app.include_router(profile.router)
+app.include_router(liked.router)
 
 models.Base.metadata.create_all(bind=engine)
 

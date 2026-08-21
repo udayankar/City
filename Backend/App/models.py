@@ -28,6 +28,13 @@ class Saved_Posts(Base):
     Post_ID = Column(Integer , ForeignKey("Posts.ID" , ondelete="CASCADE"))
     Saved_at = Column(TIMESTAMP(timezone=True) , nullable=True , server_default=func.NOW())
 
-    __table_args__ = (
-        UniqueConstraint("User_ID", "Post_ID", name="unique_saved_post"),
-    )
+    __table_args__ = (UniqueConstraint("User_ID", "Post_ID", name="unique_saved_post"),)
+
+class Liked_Posts(Base):
+    __tablename__ = "Liked_Posts"
+    ID = Column(Integer , primary_key=True)
+    Post_ID = Column(Integer , ForeignKey("Posts.ID" ,  ondelete="CASCADE") , nullable=False)
+    User_ID = Column(Integer , ForeignKey("Users.ID" , ondelete="CASCADE") , nullable=False)
+    Liked_at = Column(TIMESTAMP(timezone=True) , nullable=True , server_default=func.NOW())
+
+    __table_args__ = (UniqueConstraint("Post_ID" , "User_ID" , name="unique_liked_post"),)

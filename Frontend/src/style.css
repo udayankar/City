@@ -1125,23 +1125,29 @@ body{
     margin-top: 20px;
 }
 
-.post-action{
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 16px;
+.post-action {
+    padding: 8px 14px;
     border: none;
-    border-radius: 10px;
-    background: #f6f6f8;
-    font-size: 13px;
-    font-weight: 500;
+    border-radius: 8px;
+    background: #f1f1f1;
+    color: #333;
     cursor: pointer;
-    transition: .25s;
+    transition: 0.2s ease;
+}
+
+.post-action.liked {
+    background: #ffe4e6;
+    color: #e11d48;
+}
+
+.post-action.liked:hover {
+    background: #ececff;
+    color: #5B4CF6;
 }
 
 .post-action:hover{
-    background: #ececff;
-    color: #5B4CF6;
+    background: #ffe4e6;
+    color: #e11d48;
 }
 
 .home-foot-link{

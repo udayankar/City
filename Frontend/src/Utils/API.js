@@ -1,3 +1,5 @@
+import { data } from "autoprefixer";
+
 export const SignupUser = async (username, email, password) => {
     try {
         const response = await fetch("http://localhost:8000/users/signup/", {
@@ -139,6 +141,46 @@ export const Unsave_Posts = async (id) => {
             success: false,
             data: null,
             error: error.message,
+        };
+    }
+};
+
+export const Like_Posts = async (id) => {
+    try {
+        const resposne = await fetch(`http://localhost:8000/posts/${id}/like` , {
+            method : "POST",
+            credentials : "include"
+        });
+        const data = await resposne.json()
+        return {
+            success : resposne.ok,
+            data
+        };
+    } catch (error) {
+        return {
+            success : false,
+            data : null,
+            error : error.message
+        };
+    }
+};
+
+export const Unlike_Posts = async (id) => {
+    try {
+        const response = await fetch(`http://localhost:8000/posts/${id}/unlike` , {
+            method : "POST",
+            credentials : "include"
+        });
+        const data = await response.json()
+        return {
+            success : response.ok,
+            data
+        };
+    } catch (error) {
+        return {
+            success : false,
+            data : null,
+            error : error.message
         };
     }
 };
