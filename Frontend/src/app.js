@@ -18,6 +18,7 @@ const Login = lazy(() => import("./Pages/Login"));
 const Signup = lazy(() => import("./Pages/Signup"));
 const Profile = lazy(() => import("./Pages/Profile"));
 const Community = lazy(() => import("./Pages/Community"));
+const Events = lazy(() => import("./Pages/Events"));
 
 
 const App = () => {
@@ -76,6 +77,10 @@ const AppRouter = createBrowserRouter([
             {
                 path: "/community",
                 element: <Community/>
+            },
+            {
+                path: "/events",
+                element: <Events/>
             }
         ]
     },

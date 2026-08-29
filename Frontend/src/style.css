@@ -673,6 +673,7 @@ body{
     display: flex;
     align-items: center;
     gap: 12px;
+    height: 90px;
 }
 
 .event-body-img{
@@ -1602,6 +1603,10 @@ body{
     font-size:14px;
     line-height:1.7;
     color:#555;
+}
+
+.profile-content .home-post {
+    margin-bottom: 20px;
 }
 
 .profile-post-actions{
@@ -2763,4 +2768,332 @@ body{
     color: #c43d3d;
     font-size: 14px;
     font-weight: 500;
+}
+
+.events-page {
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.events-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.events-title h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #2f2f2f;
+}
+
+.events-title p {
+    margin: 6px 0 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.events-card-description {
+    margin: 0 0 14px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #777;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.events-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.events-search {
+    width:350px;
+    height:44px;
+    display:flex;
+    align-items:center;
+    background:#ffffff;
+    border:1px solid #e8e8e8;
+    border-radius:12px;
+    overflow:hidden;
+    transition:.25s;
+}
+
+.events-search-txt {
+    flex: 1;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0 12px;
+    font-size: 13px;
+    caret-color: #5B4CF6;
+}
+
+.events-search-butt {
+    width: 40px;
+    height: 100%;
+    border: none;
+    background: white;
+    cursor: pointer;
+}
+
+.events-create-butt {
+    height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    padding:0 16px;
+    flex-shrink:0;
+    border:none;
+    border-radius:12px;
+    background:#5B4CF6;
+    color:#ffffff;
+    font-family:Arial,sans-serif;
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.events-create-butt span{
+    font-size:18px;
+    line-height:1;
+}
+
+.events-create-butt:hover {
+    background: #4c3fe0;
+}
+
+.events-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 22px;
+}
+
+.events-tabs {
+    display: flex;
+    gap: 28px;
+}
+
+.events-tab {
+    position: relative;
+    border: none;
+    background: transparent;
+    padding: 8px 2px 11px;
+    color: #777;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.events-tab:hover {
+    color: #5B4CF6;
+}
+
+.events-tab.active {
+    color: #5B4CF6;
+    font-weight: 600;
+}
+
+.events-tab.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: #5B4CF6;
+    border-radius: 2px;
+}
+
+.events-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.events-control {
+    position: relative;
+}
+
+.events-control-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    color: #777;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.events-control-button strong {
+    color: #333;
+    font-weight: 600;
+}
+
+.events-control-arrow {
+    font-size: 9px;
+}
+
+.events-dropdown {
+    position: absolute;
+    right: 0;
+    top: 43px;
+    min-width: 150px;
+    margin: 0;
+    padding: 5px;
+    list-style: none;
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 9px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+    z-index: 10;
+}
+
+.events-dropdown li {
+    padding: 9px 11px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #555;
+    cursor: pointer;
+}
+
+.events-dropdown li:hover {
+    background: #f2f1ff;
+    color: #5B4CF6;
+}
+
+.events-main {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.events-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #e8e8e8;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .04);
+    transition: .2s;
+}
+
+.events-card:hover {
+    border-color: #5B4CF6;
+    box-shadow: 0 10px 24px rgba(91,76,246,.08);
+}
+
+.events-card-image {
+    width: 100%;
+    height: 190px;
+    overflow: hidden;
+    background: #f1f1f1;
+}
+
+.events-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.events-card-content {
+    padding: 15px 17px;
+}
+
+.events-card-title {
+    margin: 0 0 12px;
+    font-size: 17px;
+    font-weight: 650;
+    color: #2f2f2f;
+}
+
+.events-card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.events-card-details span {
+    font-size: 12px;
+    color: #777;
+}
+
+.events-card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.events-card-organiser {
+    font-size: 12px;
+    color: #777;
+}
+
+.events-card-save {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 7px;
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+.events-card-save:hover {
+    background: #f2f1ff;
+}
+
+@media (max-width: 800px) {
+    .events-head {
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .events-head-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .events-main {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .events-page {
+        padding: 16px;
+    }
+    .events-head {
+        flex-direction: column;
+    }
+    .events-head-actions {
+        width: 100%;
+    }
+    .events-search {
+        width: 100%;
+    }
+    .events-create-butt {
+        width: 100%;
+    }
+    .events-menu {
+        align-items: flex-start;
+        gap: 12px;
+        flex-direction: column;
+    }
 }

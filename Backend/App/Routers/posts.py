@@ -52,6 +52,9 @@ async def addPost(payload : schemas.Post , response : Response , db : Session = 
 @router.get("/me/posts" , response_model=List[schemas.ReturnPosts])
 async def myPosts(response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
     myposts = db.query(models.Posts , func.count(models.Liked_Posts.User_ID).label("likes")).outerjoin(models.Liked_Posts,models.Posts.ID == models.Liked_Posts.Post_ID).filter(models.Posts.Author_ID == current_user.ID).group_by(models.Posts.ID)
+    liked = db.query(models.Liked_Posts.Post_ID).filter(models.Liked_Posts.User_ID == current_user.ID).all()
+    liked_id = {item.Post_ID for item in liked}
+
     return [{
         "ID" : post.ID,
         "Username" : current_user.Username,
@@ -59,6 +62,7 @@ async def myPosts(response : Response , db : Session = Depends(get_db) , current
         "Content" : post.Content,
         "Location" : post.Location,
         "isSaved" : False,
+        "isLiked" : post.ID in liked_id,
         "Likes" : likes,
         "Created_at" : post.Created_at,
         "isMine" : True

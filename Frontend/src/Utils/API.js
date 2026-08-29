@@ -288,3 +288,21 @@ export const Edit_Password = async (payload) => {
         }
     }
 };
+
+export const All_Events = async () => {
+    try {
+        const response = await fetch("http://localhost:8000/events" , {
+            credentials : "include"
+        })
+        const data = await response.json()
+        return {
+            success : response.ok,
+            data
+        }
+    } catch (error) {
+        return {
+            success : false,
+            error
+        }
+    }
+};

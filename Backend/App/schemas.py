@@ -54,6 +54,30 @@ class ReturnPosts(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class Events(BaseModel):
+    Title : str
+    Description : str
+    Category : str
+    Location : str
+    Start_Date : datetime
+    End_Date : datetime
+    Organiser : str
+    Image : Optional[str] = None
+
+class Return_Events(BaseModel):
+    ID : int
+    Title : str
+    Description : str
+    Category : str
+    Location : str
+    Start_Date : datetime
+    End_Date : datetime
+    Organiser : str
+    Image : Optional[str] = None
+    isSaved : bool
+
+    model_config = ConfigDict(from_attributes=True)
+
 
 
 

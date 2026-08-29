@@ -1,5 +1,5 @@
 from .databse import Base
-from sqlalchemy import Column , String , Integer , ForeignKey , TIMESTAMP , UniqueConstraint
+from sqlalchemy import Column , String , Integer , ForeignKey , TIMESTAMP , UniqueConstraint , DateTime , Date
 from sqlalchemy.sql import func
 
 class User(Base):
@@ -38,3 +38,15 @@ class Liked_Posts(Base):
     Liked_at = Column(TIMESTAMP(timezone=True) , nullable=True , server_default=func.NOW())
 
     __table_args__ = (UniqueConstraint("Post_ID" , "User_ID" , name="unique_liked_post"),)
+
+class Events(Base):
+    __tablename__ = "Events"
+    ID = Column(Integer , primary_key=True)
+    Title = Column(String(200) , nullable=False)
+    Description = Column(String , nullable=False)
+    Category = Column(String , nullable=False)
+    Location = Column(String , nullable=False)
+    Start_Date = Column(DateTime , nullable=False)
+    End_Date = Column(DateTime , nullable=False)
+    Organiser = Column(String , nullable=False)
+    Image = Column(String , nullable=True)

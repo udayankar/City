@@ -1,5 +1,18 @@
-const ProfilePost = ({ID , Username , Title , Content , Location , Created_at}) => {
+import { useState , useEffect } from "react";
+import { useSelector , useDispatch } from "react-redux";
+import { Save_Posts , Unsave_Posts , Like_Posts , Unlike_Posts } from "../../Utils/API";
+import { addItem , removeItem } from "../../Utils/SavedSlice";
 
+const HomePost = ({image , ID , Username , Title , Content , Location , isSaved , isLiked , Likes , Created_at , isMine}) => {
+
+    const [Saved , setSaved] = useState(isSaved);
+    const [Liked, setLiked] = useState(isLiked);
+    const [LikeCount , setLikeCount] = useState(Likes);
+
+    const user = useSelector((store) => store.User);
+    const dispatch = useDispatch()
+    const isLoggedin = user.isLoggedIn
+    
     const now = new Date();
     const created = new Date(Created_at);
     const diff = now - created;
@@ -25,27 +38,73 @@ const ProfilePost = ({ID , Username , Title , Content , Location , Created_at}) 
         time = `${weeks} week${weeks > 1 ? "s" : ""} ago`;
     } else if (months < 12) {
         time = `${months} month${months > 1 ? "s" : ""} ago`;
-    } 
+    }        
+
+    const handle_save = async (id) => {
+        if (!isLoggedin) {
+            return 
+        } else {
+            if (Saved) {
+                const result = await Unsave_Posts(id);
+                if (result.success) {
+                    setSaved(!Saved)
+                    dispatch(removeItem(id))
+                }
+            } else if (!Saved) {
+                const result = await Save_Posts(id);
+                if (result.success) {
+                    setSaved(!Saved)
+                    dispatch(addItem(id))
+                }
+            }
+        }
+    };
+
+    const handle_like = async (id) => {
+        if (!isLoggedin) {
+            return
+        } else {
+            if (Liked) {
+                const result = await Unlike_Posts(id);
+                if (result.success) {
+                    setLikeCount(prev => prev-1);
+                    setLiked(false);
+                }
+            } else if (!Liked) {
+                const result = await Like_Posts(id);
+                if (result.success) {
+                    setLiked(true);
+                    setLikeCount(prev => prev+1);
+                }
+            }
+        }
+    };
 
     return (
-        <article className="profile-post">
-            <div className="profile-post-top">
-                <div className="profile-post-user">
-                    <div>
-                        <h3 className="profile-post-name">{Username}</h3>
-                        <p className="profile-post-location">{Location} • {time}</p>
+        <div className={"home-post"}>
+            <div className="home-post-top">
+                <div className="home-post-user">
+                    <img src={image} className="home-post-dp"/>
+                    <div className="home-post-profile">
+                        <span className="home-post-name">{Username}</span>
+                        <span className="home-post-username">{time}</span>
+                        <span className="home-post-location">📍 {Location}</span>
                     </div>
                 </div>
+                <button className="home-post-menu">⋮</button>
             </div>
-            <h3 className="profile-post-title">{Title}</h3>
-            <p className="profile-post-content">{Content}.</p>
-            <div className="profile-post-actions">
-                <button className="profile-post-action">👍 52</button>
-                <button className="profile-post-action">💬 12</button>
-                <button className="profile-post-action">↗ 5</button>
+            <div className="home-post-body">
+                <span className="home-post-title">{Title}</span>
+                <p className="home-post-text">{Content}</p>
             </div>
-        </article>
+            <div className="home-post-bottom">
+                <button className={`post-action ${Liked ? "liked" : ""}`} onClick={() => handle_like(ID)}>{Liked ? "❤️" : "👍"} {LikeCount}</button>
+                {/* <button className="post-action">💬 {comments}</button>
+                <button className="post-action">🔄 {shares}</button> */}
+                <button className="post-action" onClick={() => {handle_save(ID)}}>{Saved ? "✅ Saved" : "🔖 Save"}</button>
+            </div>
+        </div>
     )
-}
+};
 
-export default ProfilePost; 
+export default HomePost;
