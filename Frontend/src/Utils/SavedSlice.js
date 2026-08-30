@@ -2,24 +2,44 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const SavedSlice = createSlice({
     name: "Saved",
-    initialState: [],
+    initialState: {
+        posts: [],
+        events: []
+    },
+
     reducers: {
-        addItem: (state, action) => {
-            if (!state.includes(action.payload)) {
-                state.push(action.payload);
+        addPost: (state, action) => {
+            if (!state.posts.includes(action.payload)) {
+                state.posts.push(action.payload);
             }
         },
-        removeItem: (state, action) => {
-            return state.filter(id => id !== action.payload);
+
+        removePost: (state, action) => {
+            state.posts = state.posts.filter(id => id !== action.payload);
         },
-        clearItem: () => {
-            return [];
+
+        addEvent: (state, action) => {
+            if (!state.events.includes(action.payload)) {
+                state.events.push(action.payload);
+            }
         },
+
+        removeEvent: (state, action) => {
+            state.events = state.events.filter(id => id !== action.payload);
+        },
+
+        clearItems: (state) => {
+            state.posts = [];
+            state.events = [];
+        },
+
         setItems: (state, action) => {
-            return action.payload;
+            state.posts = action.payload.posts || [];
+            state.events = action.payload.events || [];
         }
     }
 });
 
-export const {addItem , removeItem , clearItem , setItems} = SavedSlice.actions;
-export default SavedSlice.reducer; 
+export const {addPost , removePost , addEvent , removeEvent , clearItems , setItems} = SavedSlice.actions;
+
+export default SavedSlice.reducer;

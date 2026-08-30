@@ -11,7 +11,8 @@ const Sidebar = () => {
     const dispatch = useDispatch()
     const user = useSelector((store) => store.User)
     const isLoggedin = user.isLoggedIn
-    const save = useSelector((store) => store.Saved)
+    const saved = useSelector((store) => store.Saved)
+    const total = saved.posts.length + saved.events.length;
 
     const handle_saved = async () => {
         const response = await Saved();
@@ -55,7 +56,7 @@ const Sidebar = () => {
                 </ul>
                 <ul className="control-cont">
                     <li><NavLink to="/alerts">Alerts</NavLink></li>
-                    <li><NavLink to="/saved">Saved ({save.length})</NavLink></li>
+                    <li><NavLink to="/saved">Saved ({total})</NavLink></li>
                     <li><NavLink to="/profile">Profile</NavLink></li>
                     <li><NavLink to="/settings">Settings</NavLink></li>
                 </ul>

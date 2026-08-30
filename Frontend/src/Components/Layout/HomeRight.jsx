@@ -2,14 +2,12 @@ import { useContext, useState , useEffect } from "react";
 import { CityContext } from "../../Utils/Context";
 import HomeEvent from "./HomeEvent";
 import { useDispatch } from "react-redux";
-import { addItem , removeItem } from "../../Utils/SavedSlice";
 import CityMap from "../Maps/citymap";
 import { CityCoordinates } from "../../Assets/CityCoordinates";
 import { All_Events } from "../../Utils/API";
 
 const HomeRight = () => {
     const {currentCity , setCurrentCity} = useContext(CityContext);
-    const dispatch = useDispatch();
 
     const [events , setEvents] = useState([]);
 
@@ -86,7 +84,7 @@ const HomeRight = () => {
                 </div>
                 <div className="event-list">
                     {events.map(event => (
-                        <HomeEvent key={event.ID} {...event} toSave={() => dispatch(addItem(event))} notSave={() => dispatch(removeItem(event))}/>
+                        <HomeEvent key={event.ID} {...event}/>
                     ))}
                 </div>
             </div>

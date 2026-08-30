@@ -1,7 +1,7 @@
 import { useState , useEffect } from "react";
 import { useSelector , useDispatch } from "react-redux";
 import { Save_Posts , Unsave_Posts , Like_Posts , Unlike_Posts } from "../../Utils/API";
-import { addItem , removeItem } from "../../Utils/SavedSlice";
+import { addPost, removePost } from "../../Utils/SavedSlice";
 
 const HomePost = ({image , ID , Username , Title , Content , Location , isSaved , isLiked , Likes , Created_at , isMine}) => {
 
@@ -10,7 +10,7 @@ const HomePost = ({image , ID , Username , Title , Content , Location , isSaved 
     const [LikeCount , setLikeCount] = useState(Likes);
 
     const user = useSelector((store) => store.User);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const isLoggedin = user.isLoggedIn
     
     const now = new Date();
@@ -24,7 +24,6 @@ const HomePost = ({image , ID , Username , Title , Content , Location , isSaved 
     const days = Math.floor(hours / 24);
     const weeks = Math.floor(days / 7);
     const months = Math.floor(days / 30);
-    const years = Math.floor(days / 365);
 
     if (seconds < 60) {
         time = "Just now";
@@ -42,20 +41,19 @@ const HomePost = ({image , ID , Username , Title , Content , Location , isSaved 
 
     const handle_save = async (id) => {
         if (!isLoggedin) {
-            return 
+            return;
+        }
+        if (Saved) {
+            const result = await Unsave_Posts(id);
+            if (result.success) {
+                setSaved(!Saved);
+                dispatch(removePost(id));
+            }
         } else {
-            if (Saved) {
-                const result = await Unsave_Posts(id);
-                if (result.success) {
-                    setSaved(!Saved)
-                    dispatch(removeItem(id))
-                }
-            } else if (!Saved) {
-                const result = await Save_Posts(id);
-                if (result.success) {
-                    setSaved(!Saved)
-                    dispatch(addItem(id))
-                }
+            const result = await Save_Posts(id);
+            if (result.success) {
+                setSaved(!Saved);
+                dispatch(addPost(id));
             }
         }
     };
@@ -79,6 +77,13 @@ const HomePost = ({image , ID , Username , Title , Content , Location , isSaved 
             }
         }
     };
+
+    useEffect(() => {
+        if (!isLoggedin) {
+            setSaved(false);
+            setLiked(false);
+        }
+    }, [isLoggedin]);
 
     return (
         <div className={`home-post ${isMine ? "my-post" : "other-post"}`}>

@@ -11,7 +11,6 @@ import "leaflet/dist/leaflet.css";
 import "./style.css";
 import Navbar from "./Components/Layout/Navbar";
 import Sidebar from "./Components/Layout/Sidebar";
-import Rightbar from "./Components/Layout/HomeRight";
 import Home from "./Pages/Home";
 
 const Login = lazy(() => import("./Pages/Login"));

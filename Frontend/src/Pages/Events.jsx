@@ -12,8 +12,10 @@ const Events = () => {
     const [searchTxt, setSearchTxt] = useState("");
     const [events, setEvents] = useState([]);
 
-    const handleEvents = async () => {
-        const result = await All_Events();
+    const category = currentFilter === "None" ? "" : currentFilter;
+
+    const handle_events = async () => {
+        const result = await All_Events(searchTxt , category , currentSort);
         console.log(result);
         if (result.success) {
             setEvents(result.data);
@@ -27,8 +29,8 @@ const Events = () => {
     };
 
     useEffect(() => {
-        handleEvents();
-    }, []);
+        handle_events();
+    }, [searchTxt, currentFilter, currentSort]);
 
     return (
         <div className="events-page">

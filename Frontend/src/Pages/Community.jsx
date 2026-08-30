@@ -18,7 +18,6 @@ const Community = () => {
 
     const navigate = useNavigate();
     const user = useSelector((store) => store.User);
-    const name = user.name;
     const isLoggedin = user.isLoggedIn;
 
     const handle_posts = async () => {

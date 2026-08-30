@@ -25,7 +25,7 @@ class Saved_Posts(Base):
     __tablename__ = "Saved_Posts"
     ID = Column(Integer , primary_key=True)
     User_ID = Column(Integer , ForeignKey("Users.ID" , ondelete="CASCADE") , nullable=False)
-    Post_ID = Column(Integer , ForeignKey("Posts.ID" , ondelete="CASCADE"))
+    Post_ID = Column(Integer , ForeignKey("Posts.ID" , ondelete="CASCADE") , nullable=False)
     Saved_at = Column(TIMESTAMP(timezone=True) , nullable=True , server_default=func.NOW())
 
     __table_args__ = (UniqueConstraint("User_ID", "Post_ID", name="unique_saved_post"),)
@@ -50,3 +50,12 @@ class Events(Base):
     End_Date = Column(DateTime , nullable=False)
     Organiser = Column(String , nullable=False)
     Image = Column(String , nullable=True)
+
+class Saved_Events(Base):
+    __tablename__ = "Saved_Events"
+    ID = Column(Integer , primary_key=True)
+    User_ID = Column(Integer , ForeignKey("Users.ID" , ondelete="CASCADE") , nullable=False)
+    Event_ID = Column(Integer , ForeignKey("Events.ID" , ondelete="CASCADE") , nullable=False)
+    Saved_at = Column(TIMESTAMP(timezone=True) , nullable=True , server_default=func.NOW())
+
+    __table_args__ = (UniqueConstraint("User_ID", "Event_ID", name="unique_saved_event"),)

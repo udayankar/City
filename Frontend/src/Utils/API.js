@@ -289,11 +289,49 @@ export const Edit_Password = async (payload) => {
     }
 };
 
-export const All_Events = async () => {
+export const All_Events = async (search = "" , category = "" , sort = "") => {
     try {
-        const response = await fetch("http://localhost:8000/events" , {
+        const response = await fetch(`http://localhost:8000/events?search=${search}&category=${category}&sort=${sort}` , {
             credentials : "include"
         })
+        const data = await response.json()
+        return {
+            success : response.ok,
+            data
+        }
+    } catch (error) {
+        return {
+            success : false,
+            error
+        }
+    }
+};
+
+export const Save_Events = async (id) => {
+    try {
+        const response = await fetch(`http://localhost:8000/events/${id}/save`, {
+            method : "POST",
+            credentials : "include"
+        });
+        const data = await response.json()
+        return {
+            success : response.ok,
+            data
+        }
+    } catch (error) {
+        return {
+            success : false,
+            error
+        }
+    }
+};
+
+export const Unsave_Events = async (id) => {
+    try {
+        const response = await fetch(`http://localhost:8000/events/${id}/unsave` , {
+            method : "DELETE",
+            credentials : "include"
+        });
         const data = await response.json()
         return {
             success : response.ok,

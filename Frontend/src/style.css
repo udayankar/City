@@ -2944,7 +2944,7 @@ body{
 }
 
 .events-control-arrow {
-    font-size: 9px;
+    font-size: 15px;
 }
 
 .events-dropdown {
@@ -3024,12 +3024,12 @@ body{
 
 .events-card-details {
     display: flex;
-    flex-direction: column;
-    gap: 7px;
+    align-items: center;
+    gap: 20px;
+    font-size: 13px;
 }
 
 .events-card-details span {
-    font-size: 12px;
     color: #777;
 }
 
@@ -3043,21 +3043,42 @@ body{
 }
 
 .events-card-organiser {
-    font-size: 12px;
+    font-size: 14px;
     color: #777;
+    font-weight: 500;
+}
+
+.events-card-saved-count {
+    font-size: 13px;
+    color: #888;
+    margin-left: auto;
+    margin-right: 12px;
+    white-space: nowrap;
 }
 
 .events-card-save {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     border-radius: 7px;
     background: #f5f5f5;
+    font-size: 17px;
     cursor: pointer;
+    transition: 
+        background-color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .events-card-save:hover {
     background: #f2f1ff;
+    transform: translateY(-1px);
+}
+
+.events-card-save:active {
+    transform: translateY(0);
 }
 
 @media (max-width: 800px) {

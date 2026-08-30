@@ -75,6 +75,7 @@ class Return_Events(BaseModel):
     Organiser : str
     Image : Optional[str] = None
     isSaved : bool
+    Saved_Counts : int
 
     model_config = ConfigDict(from_attributes=True)
 
