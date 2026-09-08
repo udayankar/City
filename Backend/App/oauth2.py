@@ -12,7 +12,15 @@ load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+EXPIRE_RAW = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+
+if not SECRET_KEY or not ALGORITHM or not EXPIRE_RAW:
+    raise RuntimeError("SECRET_KEY, ALGORITHM and ACCESS_TOKEN_EXPIRE_MINUTES must all be set in your .env file.")
+
+try:
+    ACCESS_TOKEN_EXPIRE_MINUTES = int(EXPIRE_RAW)
+except ValueError:
+    raise RuntimeError("ACCESS_TOKEN_EXPIRE_MINUTES must be an integer.")
 
 def create_access_token(data : dict):
     payload = data.copy()
@@ -21,7 +29,7 @@ def create_access_token(data : dict):
     token = jwt.encode(payload , SECRET_KEY , algorithm=ALGORITHM )
     return token
 
-def verify_token(token : str , error):
+def verify_token(token : str , error : HTTPException):
     try:
         payload = jwt.decode(token , SECRET_KEY , algorithms=[ALGORITHM])
         email = payload.get("Email")
@@ -55,7 +63,7 @@ def get_current_user_optional(request: Request , db: Session = Depends(get_db)):
         if not email:
             return None
         return db.query(models.User).filter(models.User.Email == email).first()
-    except Exception:
+    except InvalidTokenError:
         return None
 
 

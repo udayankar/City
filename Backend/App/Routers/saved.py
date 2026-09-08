@@ -1,5 +1,6 @@
 from fastapi import APIRouter , status , HTTPException , Response , Depends
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from .. import models
 from ..databse import get_db
 from ..oauth2 import get_current_user
@@ -17,26 +18,52 @@ async def savedCount(response : Response , db : Session = Depends(get_db) , curr
     
 @router.post("/posts/{id}/save")
 async def addSaved(id : int , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
+    post = db.query(models.Posts).filter(models.Posts.ID == id).first()
+    if post is None :
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND ,detail="Post not found")
+    existing = db.query(models.Saved_Posts).filter(models.Saved_Posts.User_ID
+     == current_user.ID , models.Saved_Posts.Post_ID == id).first()
+    if existing :
+        response.status_code = status.HTTP_200_OK
+        return {"message": "Already saved"}
     new_saved = models.Saved_Posts(User_ID = current_user.ID , Post_ID = id)
     db.add(new_saved)
-    db.commit()
+    try :
+        db.commit()
+    except IntegrityError :
+        db.rollback()
+        response.status_code = status.HTTP_200_OK
+        return {"message": "Already saved"}
     db.refresh(new_saved)
     response.status_code = status.HTTP_201_CREATED
     return new_saved
 
 @router.post("/posts/{id}/unsave")
-async def removeSaved(id : int , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
+async def removeSaved(id : int ,  db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
     saved = db.query(models.Saved_Posts).filter(models.Saved_Posts.User_ID == current_user.ID , models.Saved_Posts.Post_ID == id).first()
-    if saved:
-        db.delete(saved)
-        db.commit()
-        return "Unsaved succesfully"
+    if saved is None :
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail="Not currently saved")
+    db.delete(saved)
+    db.commit()
+    return {"message": "Unsaved successfully"}
 
 @router.post("/events/{id}/save")
 async def addSavedEvent(id : int , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
+    event = db.query(models.Events).filter(models.Events.ID == id).first()
+    if event is None :
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail="Event not found")
+    existing = db.query(models.Saved_Events).filter(models.Saved_Events.User_ID == current_user.ID ,models.Saved_Events.Event_ID == id).first()
+    if existing :
+        response.status_code = status.HTTP_200_OK
+        return existing
     new_saved = models.Saved_Events(User_ID = current_user.ID , Event_ID = id)
     db.add(new_saved)
-    db.commit()
+    try :
+        db.commit()
+    except IntegrityError :
+        db.rollback()
+        response.status_code = status.HTTP_200_OK
+        return {"message": "Already saved"}
     db.refresh(new_saved)
     response.status_code = status.HTTP_201_CREATED
     return new_saved
@@ -44,9 +71,10 @@ async def addSavedEvent(id : int , response : Response , db : Session = Depends(
 @router.delete("/events/{id}/unsave")
 async def removeSavedEvent(id : int , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
     saved = db.query(models.Saved_Events).filter(models.Saved_Events.Event_ID == id , models.Saved_Events.User_ID == current_user.ID).first()
-    if saved:
-        db.delete(saved)
-        db.commit()
-        return "Unsaved succesfully"
+    if saved is None :
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND ,detail="Not currently saved")
+    db.delete(saved)
+    db.commit()
+    return {"message": "Unsaved successfully"}
 
     

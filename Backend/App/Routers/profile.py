@@ -1,5 +1,6 @@
 from fastapi import APIRouter , status , HTTPException , Response , Depends
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from ..schemas import UpdateUser , UpdatePassword
 from ..oauth2 import get_current_user
 from ..databse import get_db
@@ -15,7 +16,11 @@ async def editProfile(payload : UpdateUser , response : Response , db : Session 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST , detail="No changes provided")
     for field, value in data.items():
         setattr(current_user, field, value)
-    db.commit()
+    try :
+        db.commit()
+    except IntegrityError :
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST , detail="Could not update profile")
     db.refresh(current_user)
     response.status_code = status.HTTP_200_OK
     return {"message": "Profile updated successfully"}
@@ -24,6 +29,8 @@ async def editProfile(payload : UpdateUser , response : Response , db : Session 
 async def editPassword(payload : UpdatePassword , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
     if not verify_password(payload.CurrPass, current_user.Password) :
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="Current password is incorrect")
+    if verify_password(payload.NewPass, current_user.Password) :
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="New password must be different from current password")
     current_user.Password = hashed_password(payload.NewPass)
     db.commit()
     db.refresh(current_user)
