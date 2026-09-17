@@ -1,8 +1,8 @@
-import { data } from "autoprefixer";
+const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:8000";
 
 export const SignupUser = async (username, email, password) => {
     try {
-        const response = await fetch("http://localhost:8000/users/signup/", {
+        const response = await fetch(`${API_BASE_URL}/users/signup/`, {
             method : "POST",
             headers : {
                 "Content-Type": "application/json"
@@ -14,7 +14,6 @@ export const SignupUser = async (username, email, password) => {
             })
         });
         const data = await response.json();
-        console.log(data)
         return {
             success: response.ok,
             data
@@ -31,7 +30,7 @@ export const SignupUser = async (username, email, password) => {
 
 export const LoginUser = async (email, password) => {
     try {
-        const response = await fetch("http://localhost:8000/users/login", {
+        const response = await fetch(`${API_BASE_URL}/users/login`, {
             method : "POST",
             credentials : "include",
             headers : {
@@ -43,7 +42,6 @@ export const LoginUser = async (email, password) => {
             })
         });
         const data = await response.json();
-        console.log(data)
         return {
             success: response.ok,
             data
@@ -58,10 +56,27 @@ export const LoginUser = async (email, password) => {
     }
 };
 
+export const LogoutUser = async () => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/users/logout`, {
+            method: "POST",
+            credentials: "include"
+        });
+        return {
+            success: response.ok
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        };
+    }
+};
+
 export const checkLogin = async () => {
     try {
         const response = await fetch(
-            "http://localhost:8000/users/me",
+            `${API_BASE_URL}/users/me`,
             {
                 credentials: "include"
             }
@@ -78,7 +93,6 @@ export const checkLogin = async () => {
             data: user
         };
     } catch (error) {
-        console.log(error);
         return {
             success: false,
             data: null
@@ -88,7 +102,7 @@ export const checkLogin = async () => {
 
 export const Saved = async () => {
     try {
-        const response = await fetch("http://localhost:8000/saved" , {
+        const response = await fetch(`${API_BASE_URL}/saved` , {
             credentials : "include"
         });
         const data = await response.json();
@@ -107,11 +121,11 @@ export const Saved = async () => {
 
 export const Save_Posts = async (id) => {
     try {
-        const response = await fetch(`http://localhost:8000/posts/${id}/save` , {
+        const response = await fetch(`${API_BASE_URL}/posts/${id}/save` , {
             method : "POST",
             credentials : "include"
         });
-        const data = response.json()
+        const data = await response.json();
         return {
             success : response.ok,
             data
@@ -127,11 +141,11 @@ export const Save_Posts = async (id) => {
 
 export const Unsave_Posts = async (id) => {
     try {
-        const response = await fetch(`http://localhost:8000/posts/${id}/unsave` , {
+        const response = await fetch(`${API_BASE_URL}/posts/${id}/unsave` , {
             method : "POST",
             credentials : "include"
         });
-        const data = response.json()
+        const data = await response.json();
         return {
             success : response.ok,
             data
@@ -147,13 +161,13 @@ export const Unsave_Posts = async (id) => {
 
 export const Like_Posts = async (id) => {
     try {
-        const resposne = await fetch(`http://localhost:8000/posts/${id}/like` , {
+        const response = await fetch(`${API_BASE_URL}/posts/${id}/like` , {
             method : "POST",
             credentials : "include"
         });
-        const data = await resposne.json()
+        const data = await response.json();
         return {
-            success : resposne.ok,
+            success : response.ok,
             data
         };
     } catch (error) {
@@ -167,11 +181,11 @@ export const Like_Posts = async (id) => {
 
 export const Unlike_Posts = async (id) => {
     try {
-        const response = await fetch(`http://localhost:8000/posts/${id}/unlike` , {
+        const response = await fetch(`${API_BASE_URL}/posts/${id}/unlike` , {
             method : "POST",
             credentials : "include"
         });
-        const data = await response.json()
+        const data = await response.json();
         return {
             success : response.ok,
             data
@@ -187,7 +201,7 @@ export const Unlike_Posts = async (id) => {
 
 export const All_Posts = async (search) => {
     try {
-        const response = await fetch(`http://localhost:8000/posts?search=${search}` , {
+        const response = await fetch(`${API_BASE_URL}/posts?search=${search}` , {
             credentials : "include"
         })
         const data = await response.json()
@@ -196,16 +210,17 @@ export const All_Posts = async (search) => {
             data
         }
     } catch (error) {
-        console.log(error)
         return {
-            success : false
+            success : false,
+            data : null,
+            error: error.message
         }
     }
 };
 
 export const My_Posts = async () => {
     try {
-        const response = await fetch("http://localhost:8000/me/posts" , {
+        const response = await fetch(`${API_BASE_URL}/me/posts` , {
             credentials : "include"
         })
         const data = await response.json()
@@ -214,17 +229,17 @@ export const My_Posts = async () => {
             data
         }
     } catch (error) {
-        console.log(error)
         return {
             success : false,
-            error
+            data : null,
+            error: error.message
         }
     }
 };
 
 export const Add_Post = async (title , content , location) => {
     try {
-        const response = await fetch("http://localhost:8000/me/addpost" , {
+        const response = await fetch(`${API_BASE_URL}/me/addpost` , {
             method : "POST",
             credentials : "include",
             headers : {
@@ -244,14 +259,14 @@ export const Add_Post = async (title , content , location) => {
     } catch (error) {
         return {
             success : false,
-            error
+            error: error.message
         }
     }
 };
 
 export const Edit_Profile = async (payload) => {
     try {
-        const response = await fetch("http://localhost:8000/users/me/profile" , {
+        const response = await fetch(`${API_BASE_URL}/users/me/profile` , {
             method : "PUT",
             credentials : "include",
             headers : {
@@ -263,16 +278,16 @@ export const Edit_Profile = async (payload) => {
             success : response.ok
         }
     } catch (error) {
-        console.log(error)
         return {
-            success : false
+            success : false,
+            error: error.message
         }
     }
 };
 
 export const Edit_Password = async (payload) => {
     try {
-        const response = await fetch("http://localhost:8000/users/me/password" , {
+        const response = await fetch(`${API_BASE_URL}/users/me/password` , {
             method : "PUT",
             credentials : "include",
             headers : {
@@ -284,14 +299,14 @@ export const Edit_Password = async (payload) => {
     } catch (error) {
         return {
             success : false,
-            error
+            error: error.message
         }
     }
 };
 
 export const All_Events = async (search = "" , category = "" , sort = "") => {
     try {
-        const response = await fetch(`http://localhost:8000/events?search=${search}&category=${category}&sort=${sort}` , {
+        const response = await fetch(`${API_BASE_URL}/events?search=${search}&category=${category}&sort=${sort}` , {
             credentials : "include"
         })
         const data = await response.json()
@@ -302,14 +317,15 @@ export const All_Events = async (search = "" , category = "" , sort = "") => {
     } catch (error) {
         return {
             success : false,
-            error
+            data : null,
+            error: error.message
         }
     }
 };
 
 export const Save_Events = async (id) => {
     try {
-        const response = await fetch(`http://localhost:8000/events/${id}/save`, {
+        const response = await fetch(`${API_BASE_URL}/events/${id}/save`, {
             method : "POST",
             credentials : "include"
         });
@@ -321,14 +337,14 @@ export const Save_Events = async (id) => {
     } catch (error) {
         return {
             success : false,
-            error
+            error: error.message
         }
     }
 };
 
 export const Unsave_Events = async (id) => {
     try {
-        const response = await fetch(`http://localhost:8000/events/${id}/unsave` , {
+        const response = await fetch(`${API_BASE_URL}/events/${id}/unsave` , {
             method : "DELETE",
             credentials : "include"
         });
@@ -340,7 +356,7 @@ export const Unsave_Events = async (id) => {
     } catch (error) {
         return {
             success : false,
-            error
+            error: error.message
         }
     }
 };

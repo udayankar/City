@@ -11,26 +11,43 @@ const CreatePost = ({ onClose , onPostCreated }) => {
     const [location, setLocation] = useState("");
     const [createMessage, setCreateMessage] = useState("");
     const [createError, setCreateError] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const maxCharacters = 500;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await Add_Post(title , content , location);
-        if (response) {
-            setCreateError(false);
-            setCreateMessage("Post published successfully!");
-            setTitle("");
-            setContent("");
-            setLocation("");
-            await onPostCreated();
-        } else {
-            setCreateError(true);
-            setCreateMessage("Failed to publish post. Please try again.");
+        if (isSubmitting || !title.trim() || !content.trim()) {
+            return;
         }
-        setTimeout(() => {
+        setIsSubmitting(true);
+        try {
+            const response = await Add_Post(title.trim() , content.trim() , location.trim());
+            if (response && response.success) {
+                setCreateError(false);
+                setCreateMessage("Post published successfully!");
+                setTitle("");
+                setContent("");
+                setLocation("");
+                if (typeof onPostCreated === "function") {
+                    await onPostCreated();
+                }
+                setTimeout(() => {
+                    if (typeof onClose === "function") onClose();
+                }, 1000);
+            } else {
+                setCreateError(true);
+                setCreateMessage(response?.error || "Failed to publish post. Please try again.");
+            }
+        } catch (err) {
+            setCreateError(true);
+            setCreateMessage("An error occurred while publishing.");
+        } finally {
+            setIsSubmitting(false);
+            setTimeout(() => {
                 setCreateMessage("");
-        }, 3000);
+            }, 3000);
+        }
     };
 
     return (
@@ -41,13 +58,17 @@ const CreatePost = ({ onClose , onPostCreated }) => {
                         <h2>Create Post</h2>
                         <p>Share something with your city.</p>
                     </div>
-                    <button className="create-post-close" onClick={onClose}
-                    >❌</button>
+                    <button className="create-post-close" onClick={onClose} aria-label="Close dialog">❌</button>
                 </div>
                 {createMessage && (<p className={createError ? "create-error" : "create-success"}>{createMessage}</p>)}
                 <form className="create-post-form" onSubmit={handleSubmit}>
                     <div className="create-post-user">
-                        <img src={user.DP} className="create-post-user-dp" alt="Profile"/>
+                        <img 
+                            src={user.dp || user.DP || "https://tse3.mm.bing.net/th/id/OIP.QUM-ZOG4QTjh8yGPt9ZrkgHaHa?pid=Api&P=0&h=180"} 
+                            className="create-post-user-dp" 
+                            alt={user.name ? `${user.name}'s profile` : "User profile"}
+                            onError={(e) => { e.currentTarget.src = "https://tse3.mm.bing.net/th/id/OIP.QUM-ZOG4QTjh8yGPt9ZrkgHaHa?pid=Api&P=0&h=180"; }}
+                        />
                         <div className="create-post-user-info">
                             <span className="create-post-user-name">{user.name}</span>
                             <span className="create-post-user-location">Posting to your city community</span>
@@ -74,9 +95,10 @@ const CreatePost = ({ onClose , onPostCreated }) => {
                         </div>
                     </div>
                     <div className="create-post-actions">
-                        <button type="button" className="create-post-cancel" onClick={onClose}>Cancel</button>
-                        <button type="submit" className="create-post-submit" disabled={!title.trim() || !content.trim()}
-                        >Publish Post</button>
+                        <button type="button" className="create-post-cancel" onClick={onClose} disabled={isSubmitting}>Cancel</button>
+                        <button type="submit" className="create-post-submit" disabled={isSubmitting || !title.trim() || !content.trim()}>
+                            {isSubmitting ? "Publishing..." : "Publish Post"}
+                        </button>
                     </div>
                 </form>
             </div>

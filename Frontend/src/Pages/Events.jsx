@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import EventCard from "../Components/Layout/EventCard";
 import { All_Events } from "../Utils/API";
+import Loader from "../Components/UI/Loader";
 
 const Events = () => {
 
@@ -11,14 +12,19 @@ const Events = () => {
     const [currentFilter, setCurrentFilter] = useState("None");
     const [searchTxt, setSearchTxt] = useState("");
     const [events, setEvents] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const category = currentFilter === "None" ? "" : currentFilter;
 
     const handle_events = async () => {
-        const result = await All_Events(searchTxt , category , currentSort);
-        console.log(result);
-        if (result.success) {
-            setEvents(result.data);
+        setIsLoading(true);
+        try {
+            const result = await All_Events(searchTxt.trim() , category , currentSort);
+            if (result.success && Array.isArray(result.data)) {
+                setEvents(result.data);
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -29,7 +35,23 @@ const Events = () => {
     };
 
     useEffect(() => {
-        handle_events();
+        let isCurrent = true;
+        const timer = setTimeout(async () => {
+            setIsLoading(true);
+            try {
+                const result = await All_Events(searchTxt.trim() , category , currentSort);
+                if (isCurrent && result.success && Array.isArray(result.data)) {
+                    setEvents(result.data);
+                }
+            } finally {
+                if (isCurrent) setIsLoading(false);
+            }
+        }, 250);
+
+        return () => {
+            isCurrent = false;
+            clearTimeout(timer);
+        };
     }, [searchTxt, currentFilter, currentSort]);
 
     return (
@@ -41,8 +63,8 @@ const Events = () => {
                 </div>
                 <div className="events-head-actions">
                     <div className="events-search">
-                        <input className="events-search-txt" type="text" placeholder="Search events..." value={searchTxt}onChange={(e) => setSearchTxt(e.target.value)}/>
-                        <button className="events-search-butt" onClick={handleSearch}>{searchTxt.length > 0 ? "❌" : "🔍"}</button>
+                        <input className="events-search-txt" type="text" placeholder="Search events..." value={searchTxt} onChange={(e) => setSearchTxt(e.target.value)} aria-label="Search events"/>
+                        <button className="events-search-butt" onClick={handleSearch} aria-label={searchTxt.length > 0 ? "Clear search" : "Search"}>{searchTxt.length > 0 ? "❌" : "🔍"}</button>
                     </div>
                     <button className="events-create-butt">
                         <span>＋</span>
@@ -53,14 +75,12 @@ const Events = () => {
             <div className="events-menu">
                 <div className="events-tabs">
                     <button className={`events-tab ${ activeTab === "upcoming" ? "active" : ""}`} onClick={() => setActiveTab("upcoming")}>Upcoming</button>
-                    <button className={`events-tab ${activeTab === "ongoing" ? "active" : ""}`} onClick={() => setActiveTab("ongoing")}
-                    >Ongoing</button>
-                    <button className={`events-tab ${activeTab === "past" ? "active" : ""}`} onClick={() => setActiveTab("past")}
-                    >Past</button>
+                    <button className={`events-tab ${activeTab === "ongoing" ? "active" : ""}`} onClick={() => setActiveTab("ongoing")}>Ongoing</button>
+                    <button className={`events-tab ${activeTab === "past" ? "active" : ""}`} onClick={() => setActiveTab("past")}>Past</button>
                 </div>
                 <div className="events-controls">
                     <div className="events-control">
-                        <button className="events-control-button" onClick={() => {setSortOpen(!sortOpen); setFilterOpen(false);}}>
+                        <button className="events-control-button" onClick={() => {setSortOpen(!sortOpen); setFilterOpen(false);}} aria-expanded={sortOpen}>
                             <span>Sort</span>
                             <strong>{currentSort}</strong>
                             <span className="events-control-arrow">⬇️</span>
@@ -74,7 +94,7 @@ const Events = () => {
                         )}
                     </div>
                     <div className="events-control">
-                        <button className="events-control-button" onClick={() => {setFilterOpen(!filterOpen); setSortOpen(false);}}>
+                        <button className="events-control-button" onClick={() => {setFilterOpen(!filterOpen); setSortOpen(false);}} aria-expanded={filterOpen}>
                             <span>Filter</span>
                             <strong>{currentFilter}</strong>
                             <span className="events-control-arrow">⬇️</span>
@@ -82,8 +102,7 @@ const Events = () => {
                         {filterOpen && (
                             <ul className="events-dropdown">
                                 <li onClick={() => {setCurrentFilter("None"); setFilterOpen(false);}}>None</li>
-                                <li onClick={() => {setCurrentFilter("Community"); setFilterOpen(false);}}
-                                >Community</li>
+                                <li onClick={() => {setCurrentFilter("Community"); setFilterOpen(false);}}>Community</li>
                                 <li onClick={() => {setCurrentFilter("Education");setFilterOpen(false);}}>Education</li>
                                 <li onClick={() => {setCurrentFilter("Arts");setFilterOpen(false);}}>Arts</li>
                                 <li onClick={() => {setCurrentFilter("Sports");setFilterOpen(false);}}>Sports</li>
@@ -94,7 +113,15 @@ const Events = () => {
                 </div>
             </div>
             <main className="events-main">
-                {events.map((event) => (<EventCard key={event.ID} {...event}/>))}
+                {isLoading ? (
+                    <Loader message="Loading events..." />
+                ) : events.length > 0 ? (
+                    events.map((event) => (<EventCard key={event.ID} {...event}/>))
+                ) : (
+                    <div className="empty-feed">
+                        <p>No events found. Check back later or try adjusting filters.</p>
+                    </div>
+                )}
             </main>
         </div>
     );

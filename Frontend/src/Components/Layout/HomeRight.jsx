@@ -10,17 +10,37 @@ const HomeRight = () => {
     const {currentCity , setCurrentCity} = useContext(CityContext);
 
     const [events , setEvents] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const handle_events = async () => {
-        const result = await All_Events();
-        if (result.success) {
-            setEvents(result.data)
+        setIsLoading(true);
+        try {
+            const result = await All_Events();
+            if (result.success && Array.isArray(result.data)) {
+                setEvents(result.data);
+            }
+        } finally {
+            setIsLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
-        handle_events();
+        let isCurrent = true;
+        (async () => {
+            setIsLoading(true);
+            try {
+                const result = await All_Events();
+                if (isCurrent && result.success && Array.isArray(result.data)) {
+                    setEvents(result.data);
+                }
+            } finally {
+                if (isCurrent) setIsLoading(false);
+            }
+        })();
+        return () => { isCurrent = false; };
     } , []);
+
+    const coordinates = CityCoordinates[currentCity] || CityCoordinates["Rohtak"] || [28.8955, 76.6066];
 
     return (
         <div className="right-cont">
@@ -30,7 +50,7 @@ const HomeRight = () => {
                     <span className="explore-extend">View Full Map</span>
                 </div>
                 <div className="map-container">
-                    <CityMap key={currentCity} center={CityCoordinates[currentCity]}/>
+                    <CityMap key={currentCity} center={coordinates}/>
                 </div>
                 <div className="explore-tag">
                     <button className="explore-park">🌲 Parks</button>
@@ -80,12 +100,16 @@ const HomeRight = () => {
             <div className="event-cont">
                 <div className="event-top">
                     <span className="event-head">Upcoming Events</span>
-                    <span className="event-extend">View all</span>
+                    <a href="/events" className="event-extend">View all</a>
                 </div>
                 <div className="event-list">
-                    {events.map(event => (
-                        <HomeEvent key={event.ID} {...event}/>
-                    ))}
+                    {events.length > 0 ? (
+                        events.slice(0, 3).map(event => (
+                            <HomeEvent key={event.ID} {...event}/>
+                        ))
+                    ) : (
+                        <p className="empty-home-events">No upcoming events right now.</p>
+                    )}
                 </div>
             </div>
         </div>

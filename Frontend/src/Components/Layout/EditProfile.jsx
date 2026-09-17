@@ -22,43 +22,49 @@ const Edit_Profile = ({closeEditor}) => {
     const [confirmpass , setConfirmpass] = useState("");
     const [username , setUsername] = useState(Org_name);
     const [bio , setBio] = useState(Org_bio);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handle_edit = async () => {
-        const payload = {};
-        let profileChanged = false;
-        let passwordChanged = false;
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        try {
+            const payload = {};
+            let profileChanged = false;
 
-        if (username !== Org_name) {
-            payload.Username = username;
-            profileChanged = true;
-        }
-        if (bio !== Org_bio) {
-            payload.Bio = bio;
-            profileChanged = true;
-        }
-        if (profileChanged) {
-            const response = await EditProfileAPI(payload);
-            if (response.success) {
-                dispatch(inUser({name: username , bio: bio}));
-            } else {
-                setEditError(true);
-                setEditMessage("Couldn't update your profile.");
-                return;
+            if (username !== Org_name) {
+                payload.Username = username;
+                profileChanged = true;
             }
-        }
-        if (currpass || newpass || confirmpass) {
-            const passwordResult = await handle_pass();
-            if (!passwordResult) {
-                return;
+            if (bio !== Org_bio) {
+                payload.Bio = bio;
+                profileChanged = true;
             }
-        }
-        if (!profileChanged && !currpass && !newpass && !confirmpass) {
+            if (profileChanged) {
+                const response = await EditProfileAPI(payload);
+                if (response.success) {
+                    dispatch(inUser({name: username , bio: bio}));
+                } else {
+                    setEditError(true);
+                    setEditMessage("Couldn't update your profile.");
+                    return;
+                }
+            }
+            if (currpass || newpass || confirmpass) {
+                const passwordResult = await handle_pass();
+                if (!passwordResult) {
+                    return;
+                }
+            }
+            if (!profileChanged && !currpass && !newpass && !confirmpass) {
+                setEditError(false);
+                setEditMessage("No changes were made.");
+                return;
+            }   
             setEditError(false);
-            setEditMessage("No changes were made.");
-            return;
-        }   
-        setEditError(false);
-        setEditMessage("Changes saved successfully!");
+            setEditMessage("Changes saved successfully!");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handle_pass = async () => {
@@ -111,7 +117,7 @@ const Edit_Profile = ({closeEditor}) => {
                         <h2>Edit Profile</h2>
                         <p>Update your account information</p>
                     </div>
-                    <button className="profile-drawer-close" onClick={closeEditor}>×</button>
+                    <button className="profile-drawer-close" onClick={closeEditor} aria-label="Close edit profile">×</button>
                 </div>
                 {editMessage && (
                 <p className={editError ? "profile-error" : "profile-success"}>
@@ -119,7 +125,12 @@ const Edit_Profile = ({closeEditor}) => {
                 )}
                 <div className="profile-drawer-body">
                     <div className="profile-picture-edit">
-                        <img className="profile-drawer-avatar" src="xyz" alt="Profile"/>
+                        <img 
+                            className="profile-drawer-avatar" 
+                            src={user.dp || "https://tse3.mm.bing.net/th/id/OIP.QUM-ZOG4QTjh8yGPt9ZrkgHaHa?pid=Api&P=0&h=180"} 
+                            alt={`${username || "User"}'s avatar`}
+                            onError={(e) => { e.currentTarget.src = "https://tse3.mm.bing.net/th/id/OIP.QUM-ZOG4QTjh8yGPt9ZrkgHaHa?pid=Api&P=0&h=180"; }}
+                        />
                         <button className="change-picture">Change Picture</button>
                     </div>
                     <div className="profile-form-section">
@@ -144,8 +155,10 @@ const Edit_Profile = ({closeEditor}) => {
                     </div>
                 </div>
                 <div className="profile-drawer-footer">
-                    <button className="profile-cancel" onClick={closeEditor}>Cancel</button>
-                    <button className="profile-save" onClick={handle_edit}>Save Changes</button>
+                    <button className="profile-cancel" onClick={closeEditor} disabled={isSubmitting}>Cancel</button>
+                    <button className="profile-save" onClick={handle_edit} disabled={isSubmitting}>
+                        {isSubmitting ? "Saving..." : "Save Changes"}
+                    </button>
                 </div>
             </aside>
          </>

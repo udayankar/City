@@ -34,17 +34,23 @@ const HomeMain = () => {
         greeting = "Good Night";
     }
 
-    const handle_posts = async () => {
-        const result = await All_Posts("");
-        console.log(result)
-        if (result.success) {
-            setPosts(result.data)
-        }
-    }
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        handle_posts()
-    } , [])
+        let isCurrent = true;
+        (async () => {
+            setIsLoading(true);
+            try {
+                const result = await All_Posts("");
+                if (isCurrent && result.success && Array.isArray(result.data)) {
+                    setPosts(result.data);
+                }
+            } finally {
+                if (isCurrent) setIsLoading(false);
+            }
+        })();
+        return () => { isCurrent = false; };
+    } , []);
 
     return (
         <div className="main-cont">
@@ -61,9 +67,9 @@ const HomeMain = () => {
                     </div>
                 </div>
                 <div className="hero-foot">
-                    <button className="hero-explore">🏢 Explore City</button>
-                    <button className="hero-journey">🚌 Plan Journey</button>
-                    <button className="hero-report">📢 Report Issue</button>
+                    <NavLink to="/maps" className="hero-explore" style={{ textDecoration: "none", textAlign: "center" }}>🏢 Explore City</NavLink>
+                    <NavLink to="/travel" className="hero-journey" style={{ textDecoration: "none", textAlign: "center" }}>🚌 Plan Journey</NavLink>
+                    <NavLink to="/community" className="hero-report" style={{ textDecoration: "none", textAlign: "center" }}>📢 Report Issue</NavLink>
                 </div>
             </div>
             <div className="home-mid">
@@ -85,14 +91,18 @@ const HomeMain = () => {
                     <span className="home-foot-tag">Following</span>
                 </div>
                 <div className="home-foot-list">
-                    {posts.map(post => (
-                        <HomePost key={post.ID} {...post}/>
-                    ))}
+                    {posts.length > 0 ? (
+                        posts.slice(0, 5).map(post => (
+                            <HomePost key={post.ID} {...post}/>
+                        ))
+                    ) : (
+                        <p className="empty-home-posts">No posts available right now.</p>
+                    )}
                 </div>
                 <NavLink to="/community" className="home-foot-link">View Full Community ➡️</NavLink>
             </div>
         </div>
-    )
+    );
 }
 
 export default HomeMain;

@@ -1,5 +1,5 @@
 import { createBrowserRouter , RouterProvider , Outlet } from "react-router-dom";
-import { useContext, useState , useEffect , lazy , suspense, Suspense } from "react";
+import { useContext, useState , useEffect , lazy , Suspense } from "react";
 import { Provider } from "react-redux"; 
 import { createRoot } from "react-dom/client";
 import { useDispatch } from "react-redux";
@@ -18,7 +18,10 @@ const Signup = lazy(() => import("./Pages/Signup"));
 const Profile = lazy(() => import("./Pages/Profile"));
 const Community = lazy(() => import("./Pages/Community"));
 const Events = lazy(() => import("./Pages/Events"));
-
+const Maps = lazy(() => import("./Pages/Maps"));
+const Market = lazy(() => import("./Pages/Market"));
+const Settings = lazy(() => import("./Pages/Settings"));
+const Transport = lazy(() => import("./Pages/Transport"));
 
 const App = () => {
     const [currentCity, setCurrentCity] = useState("Rohtak");
@@ -80,6 +83,18 @@ const AppRouter = createBrowserRouter([
             {
                 path: "/events",
                 element: <Events/>
+            },
+            {
+                path: "/maps",
+                element: <Maps/>
+            },
+            {
+                path: "/market",
+                element: <Market/>
+            },
+            {
+                path: "/travel",
+                element: <Transport/>
             }
         ]
     },
@@ -100,6 +115,13 @@ const AppRouter = createBrowserRouter([
     {
         path: "/profile",
         element: <ProfileLayout/>
+    },
+    {
+        path: "/settings",
+        element: 
+            <Suspense fallback={<h2>Loading...</h2>}>
+                <Settings/>
+            </Suspense>
     }
 ]);
 

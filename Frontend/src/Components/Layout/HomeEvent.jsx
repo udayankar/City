@@ -6,13 +6,17 @@ import { Save_Events , Unsave_Events } from "../../Utils/API";
 const HomeEvent = ({ID , Title , Location , Start_Date , End_Date , Image , isSaved}) => {
     
     const [Saved , setSaved] = useState(isSaved);
+    const [isUpdatingSave, setIsUpdatingSave] = useState(false);
 
     const dispatch = useDispatch();
     const user = useSelector((store) => store.User);
-    const isLoggedin = user.isLoggedIn
+    const isLoggedin = user.isLoggedIn;
 
     const formatDate = (date) => {
-        return new Date(date).toLocaleString("en-IN", {
+        if (!date) return "";
+        const parsed = new Date(date);
+        if (isNaN(parsed.getTime())) return String(date);
+        return parsed.toLocaleString("en-IN", {
             day: "numeric",
             month: "short",
             hour: "numeric",
@@ -21,21 +25,26 @@ const HomeEvent = ({ID , Title , Location , Start_Date , End_Date , Image , isSa
     };
 
     const handle_save = async (id) => {
-        if (!isLoggedin) {
+        if (!isLoggedin || isUpdatingSave) {
             return;
         }
-        if (Saved) {
-            const result = await Unsave_Events(id);
-            if (result.success) {
-                setSaved(!Saved);
-                dispatch(removeEvent(id));
-            }
-        } else {
-            const result = await Save_Events(id);
+        setIsUpdatingSave(true);
+        try {
+            if (Saved) {
+                const result = await Unsave_Events(id);
                 if (result.success) {
-                setSaved(!Saved);
-                dispatch(addEvent(id));
+                    setSaved(false);
+                    dispatch(removeEvent(id));
+                }
+            } else {
+                const result = await Save_Events(id);
+                if (result.success) {
+                    setSaved(true);
+                    dispatch(addEvent(id));
+                }
             }
+        } finally {
+            setIsUpdatingSave(false);
         }
     };
 
@@ -45,17 +54,34 @@ const HomeEvent = ({ID , Title , Location , Start_Date , End_Date , Image , isSa
         }
     }, [isLoggedin]);
 
+    const formattedStart = formatDate(Start_Date);
+    const formattedEnd = formatDate(End_Date);
+
     return (
         <div className="event-body">
-            <img src={Image} className="event-body-img"></img>
+            <img 
+                src={Image || "https://images.unsplash.com/photo-1501286353178-1ec881214838?auto=format&fit=crop&w=600&q=80"} 
+                alt={Title || "Event"}
+                className="event-body-img"
+                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1501286353178-1ec881214838?auto=format&fit=crop&w=600&q=80"; }}
+            />
             <div className="event-info">
                 <span className="event-body-name">{Title}</span>
-                <span className="event-body-date">{formatDate(Start_Date)} - {formatDate(End_Date)}</span>
-                <span className="event-body-loc">📍{Location}</span>
+                {(formattedStart || formattedEnd) && (
+                    <span className="event-body-date">{formattedStart}{formattedEnd ? ` - ${formattedEnd}` : ""}</span>
+                )}
+                {Location && <span className="event-body-loc">📍{Location}</span>}
             </div>
-            <button className="event-like" onClick={() => {handle_save(ID)}}>{Saved ? "✅" : "🔖"}</button>
+            <button 
+                className="event-like" 
+                onClick={() => handle_save(ID)}
+                disabled={isUpdatingSave}
+                aria-label={Saved ? "Unsave event" : "Save event"}
+            >
+                {Saved ? "✅" : "🔖"}
+            </button>
         </div>
-    )
-}
+    );
+};
 
 export default HomeEvent;

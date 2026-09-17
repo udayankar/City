@@ -76,5 +76,3 @@ async def removeSavedEvent(id : int , response : Response , db : Session = Depen
     db.delete(saved)
     db.commit()
     return {"message": "Unsaved successfully"}
-
-    
