@@ -1,4 +1,4 @@
-from fastapi import APIRouter , status , HTTPException , Response , Depends
+from fastapi import APIRouter , status , HTTPException , Response , Depends , Query
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from .. import models
@@ -7,10 +7,12 @@ from ..oauth2 import get_current_user
 
 router = APIRouter(tags=["Saved"])
 
+MAX_PAGE_SIZE = 100
+
 @router.get("/saved")
-async def savedCount(response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
-    posts = db.query(models.Saved_Posts.Post_ID).filter(models.Saved_Posts.User_ID == current_user.ID).all()
-    events = db.query(models.Saved_Events.Event_ID).filter(models.Saved_Events.User_ID == current_user.ID).all()
+async def savedCount(db : Session = Depends(get_db) , current_user = Depends(get_current_user) , post_limit: int = Query(default=50 , ge=1, le=MAX_PAGE_SIZE) , post_offset : int = Query(default=0 , ge=0) , event_limit : int = Query(default=50 , ge=1 , le=MAX_PAGE_SIZE) , event_offset : int = Query(default=0 , ge=0)):
+    posts = db.query(models.Saved_Posts.Post_ID).filter(models.Saved_Posts.User_ID == current_user.ID).order_by(models.Saved_Posts.ID.desc()).offset(post_offset).limit(post_limit).all() 
+    events = db.query(models.Saved_Events.Event_ID).filter(models.Saved_Events.User_ID == current_user.ID).order_by(models.Saved_Events.ID.desc()).offset(event_offset).limit(event_limit).all()
     return {
         "posts": [item.Post_ID for item in posts],
         "events": [item.Event_ID for item in events]
@@ -38,7 +40,7 @@ async def addSaved(id : int , response : Response , db : Session = Depends(get_d
     response.status_code = status.HTTP_201_CREATED
     return new_saved
 
-@router.post("/posts/{id}/unsave")
+@router.delete("/posts/{id}/unsave")
 async def removeSaved(id : int ,  db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
     saved = db.query(models.Saved_Posts).filter(models.Saved_Posts.User_ID == current_user.ID , models.Saved_Posts.Post_ID == id).first()
     if saved is None :

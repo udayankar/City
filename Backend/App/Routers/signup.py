@@ -1,4 +1,4 @@
-from fastapi import APIRouter , status , Response , HTTPException , Depends 
+from fastapi import APIRouter, status, Response, HTTPException, Depends
 from .. import schemas
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -9,9 +9,9 @@ from .. import models
 
 router = APIRouter(prefix="/users" , tags=["Users"])
 
-@router.post("/signup" , response_model=schemas.ReturnSignupUser )
-async def SignupUser(payload : schemas.SignupUser , response : Response , db : Session=Depends(get_db)):
-    existing =  db.execute(select(models.User).where(models.User.Email == payload.Email)).scalar_one_or_none()
+@router.post("/signup" , response_model=schemas.ReturnSignupUser)
+async def SignupUser(payload : schemas.SignupUser , response : Response , db : Session = Depends(get_db)):
+    existing = db.execute(select(models.User).where(models.User.Email == payload.Email)).scalar_one_or_none()
     if existing :
         raise HTTPException(status_code=status.HTTP_409_CONFLICT , detail="Email already registered")
     payload.Password = hashed_password(payload.Password)
@@ -21,7 +21,7 @@ async def SignupUser(payload : schemas.SignupUser , response : Response , db : S
         db.commit()
     except IntegrityError :
         db.rollback()
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT ,detail="Email already registered")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT , detail="Email already registered")
     db.refresh(new_user)
     response.status_code = status.HTTP_201_CREATED
     return new_user

@@ -5,7 +5,6 @@ from ..schemas import UpdateUser , UpdatePassword
 from ..oauth2 import get_current_user
 from ..databse import get_db
 from ..utils import verify_password , hashed_password
-from .. import models
 
 router = APIRouter(prefix="/users/me")
 
@@ -21,7 +20,6 @@ async def editProfile(payload : UpdateUser , response : Response , db : Session 
     except IntegrityError :
         db.rollback()
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST , detail="Could not update profile")
-    db.refresh(current_user)
     response.status_code = status.HTTP_200_OK
     return {"message": "Profile updated successfully"}
 
@@ -33,7 +31,6 @@ async def editPassword(payload : UpdatePassword , response : Response , db : Ses
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="New password must be different from current password")
     current_user.Password = hashed_password(payload.NewPass)
     db.commit()
-    db.refresh(current_user)
     response.status_code = status.HTTP_200_OK
     return {"message": "Password changed successfully"}
           

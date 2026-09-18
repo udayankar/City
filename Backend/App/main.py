@@ -3,11 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from .databse import engine
 from . import models
 from .Routers import signup , auth , saved , posts , profile , liked , events
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:1234,http://127.0.0.1:1234").split(",") 
+cors_origins = [origin.strip() for origin in cors_origins if origin.strip()]
 
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:1234" , "http://127.0.0.1:1234"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,69 +1,74 @@
+import os
 import jwt
+from datetime import datetime, UTC, timedelta
 from jwt.exceptions import InvalidTokenError
-from fastapi import status , Depends , HTTPException , Cookie , Request
+from fastapi import status, Depends, HTTPException, Cookie, Request
 from sqlalchemy.orm import Session
-from datetime import datetime , UTC , timedelta
 from App import models
 from .databse import get_db
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 EXPIRE_RAW = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
 if not SECRET_KEY or not ALGORITHM or not EXPIRE_RAW:
-    raise RuntimeError("SECRET_KEY, ALGORITHM and ACCESS_TOKEN_EXPIRE_MINUTES must all be set in your .env file.")
+    raise RuntimeError("SECRET_KEY, ALGORITHM and ACCESS_TOKEN_EXPIRE_MINUTES " "must all be set in your .env file.")
 
-try:
+ALLOWED_ALGORITHMS = {"HS256"}
+
+if ALGORITHM not in ALLOWED_ALGORITHMS :
+    raise RuntimeError(f"Unsupported JWT algorithm: {ALGORITHM}. " f"Allowed algorithms: {', '.join(ALLOWED_ALGORITHMS)}")
+try :
     ACCESS_TOKEN_EXPIRE_MINUTES = int(EXPIRE_RAW)
-except ValueError:
+except ValueError :
     raise RuntimeError("ACCESS_TOKEN_EXPIRE_MINUTES must be an integer.")
 
-def create_access_token(data : dict):
+ACCESS_TOKEN_COOKIE = "access_token"
+
+def create_access_token(data: dict):
     payload = data.copy()
     expire = datetime.now(UTC) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    payload.update({"exp" :  expire})
-    token = jwt.encode(payload , SECRET_KEY , algorithm=ALGORITHM )
-    return token
+    payload.update({"exp": expire})
+    return jwt.encode(payload , SECRET_KEY , algorithm=ALGORITHM)
 
 def verify_token(token : str , error : HTTPException):
-    try:
-        payload = jwt.decode(token , SECRET_KEY , algorithms=[ALGORITHM])
-        email = payload.get("Email")
-        if email == None:
+    try :
+        payload = jwt.decode(token,SECRET_KEY , algorithms=[ALGORITHM])
+        subject = payload.get("sub")
+        if subject is None :
             raise error
-        return email
-    except InvalidTokenError:
+        try :
+            return int(subject)
+        except (TypeError , ValueError) :
+            raise error
+    except InvalidTokenError :
         raise error
 
-def get_current_user(access_token: str = Cookie(None) , db : Session = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    if access_token is None:
+def get_current_user(access_token: str = Cookie(None),db: Session = Depends(get_db)):
+    credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="Could not validate credentials" , headers={"WWW-Authenticate": "Bearer"},)
+    if access_token is None :
         raise credentials_exception
-    email = verify_token(access_token , credentials_exception)
-    user = db.query(models.User).filter(models.User.Email == email).first()
-    if user is None:
+    user_id = verify_token(access_token , credentials_exception)
+    user = db.query(models.User).filter(models.User.ID == user_id).first()
+    if user is None :
         raise credentials_exception
     return user
 
-def get_current_user_optional(request: Request , db: Session = Depends(get_db)):
-    token = request.cookies.get("access_token")
-    if not token:
+def get_current_user_optional(request : Request , db : Session = Depends(get_db)):
+    token = request.cookies.get(ACCESS_TOKEN_COOKIE)
+    if not token :
         return None
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("Email")
-        if not email:
+    try :
+        payload = jwt.decode(token , SECRET_KEY , algorithms=[ALGORITHM])
+        subject = payload.get("sub")
+        if subject is None :
             return None
-        return db.query(models.User).filter(models.User.Email == email).first()
-    except InvalidTokenError:
+        try :
+            user_id = int(subject)
+        except (TypeError, ValueError) :
+            return None
+        return db.query(models.User).filter(models.User.ID == user_id).first()
+    except InvalidTokenError :
         return None
 
 
