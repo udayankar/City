@@ -6,10 +6,12 @@ from sqlalchemy.exc import IntegrityError
 from ..databse import get_db
 from ..utils import hashed_password
 from .. import models
+from ..limit import limiter
 
 router = APIRouter(prefix="/users" , tags=["Users"])
 
 @router.post("/signup" , response_model=schemas.ReturnSignupUser)
+@limiter.limit("5/minute")
 async def SignupUser(payload : schemas.SignupUser , response : Response , db : Session = Depends(get_db)):
     existing = db.execute(select(models.User).where(models.User.Email == payload.Email)).scalar_one_or_none()
     if existing :

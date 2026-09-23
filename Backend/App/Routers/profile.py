@@ -5,10 +5,12 @@ from ..schemas import UpdateUser , UpdatePassword
 from ..oauth2 import get_current_user
 from ..databse import get_db
 from ..utils import verify_password , hashed_password
+from ..limit import limiter
 
 router = APIRouter(prefix="/users/me")
 
 @router.put("/profile")
+@limiter.limit("30/minute")
 async def editProfile(payload : UpdateUser , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
     data = payload.model_dump(exclude_unset=True)
     if not data:
@@ -24,13 +26,19 @@ async def editProfile(payload : UpdateUser , response : Response , db : Session 
     return {"message": "Profile updated successfully"}
 
 @router.put("/password")
+@limiter.limit("5/minute")
 async def editPassword(payload : UpdatePassword , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
     if not verify_password(payload.CurrPass, current_user.Password) :
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="Current password is incorrect")
     if verify_password(payload.NewPass, current_user.Password) :
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="New password must be different from current password")
     current_user.Password = hashed_password(payload.NewPass)
-    db.commit()
+    current_user.Token_Version = current_user.Token_Version + 1
+    try :
+        db.commit()
+    except IntegrityError :
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST , detail="Could not change password")
     response.status_code = status.HTTP_200_OK
     return {"message": "Password changed successfully"}
           

@@ -7,18 +7,19 @@ class User(Base):
     ID = Column(Integer , primary_key=True)
     Username = Column(String(200) , nullable=False)
     Email = Column(String(200) , nullable=False , unique=True , index=True)
-    Password = Column(String(200) , nullable=False)
-    Bio = Column(String(200) , nullable=True)
-    DP = Column(String , nullable=True)
+    Password = Column(String(500) , nullable=False)
+    Bio = Column(String(2000) , nullable=True)
+    DP = Column(String(2000) , nullable=True)
+    Token_Version = Column(Integer , nullable=False , default=0 , server_default="0")
     Created_at = Column(TIMESTAMP(timezone=True) , nullable=False , server_default=func.NOW())
 
 class Posts(Base):
     __tablename__ = "Posts"
     ID = Column(Integer , primary_key=True)
     Title = Column(String(200) , nullable=False)
-    Content = Column(String , nullable=False)
-    Location = Column(String , nullable=True)
-    Author_ID = Column(Integer , ForeignKey("Users.ID" , ondelete="CASCADE") , nullable=False)
+    Content = Column(String(5000) , nullable=False)
+    Location = Column(String(200) , nullable=True)
+    Author_ID = Column(Integer , ForeignKey("Users.ID" , ondelete="CASCADE") , nullable=False , index=True)
     Created_at = Column(TIMESTAMP(timezone=True) , nullable=False , server_default=func.NOW())
 
 class Saved_Posts(Base):
@@ -34,7 +35,7 @@ class Liked_Posts(Base):
     __tablename__ = "Liked_Posts"
     ID = Column(Integer , primary_key=True)
     Post_ID = Column(Integer , ForeignKey("Posts.ID" ,  ondelete="CASCADE") , nullable=False)
-    User_ID = Column(Integer , ForeignKey("Users.ID" , ondelete="CASCADE") , nullable=False)
+    User_ID = Column(Integer , ForeignKey("Users.ID" , ondelete="CASCADE") , nullable=False , index=True)
     Liked_at = Column(TIMESTAMP(timezone=True) , nullable=True , server_default=func.NOW())
 
     __table_args__ = (UniqueConstraint("Post_ID" , "User_ID" , name="unique_liked_post"),)
@@ -43,13 +44,13 @@ class Events(Base):
     __tablename__ = "Events"
     ID = Column(Integer , primary_key=True)
     Title = Column(String(200) , nullable=False)
-    Description = Column(String , nullable=False)
-    Category = Column(String , nullable=False)
-    Location = Column(String , nullable=False)
-    Start_Date = Column(DateTime , nullable=False)
+    Description = Column(String(5000) , nullable=False)
+    Category = Column(String(100) , nullable=False , index=True)
+    Location = Column(String(200) , nullable=False)
+    Start_Date = Column(DateTime , nullable=False , index=True)
     End_Date = Column(DateTime , nullable=False)
-    Organiser = Column(String , nullable=False)
-    Image = Column(String , nullable=True)
+    Organiser = Column(String(200) , nullable=False)
+    Image = Column(String(2000) , nullable=True)
 
 class Saved_Events(Base):
     __tablename__ = "Saved_Events"

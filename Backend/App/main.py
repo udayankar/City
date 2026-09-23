@@ -5,6 +5,9 @@ from . import models
 from .Routers import signup , auth , saved , posts , profile , liked , events
 from dotenv import load_dotenv
 import os
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from .limit import limiter
 
 load_dotenv()
 
@@ -12,6 +15,11 @@ cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:1234,http://127.0.0.1
 cors_origins = [origin.strip() for origin in cors_origins if origin.strip()]
 
 app = FastAPI()
+
+app.state.limiter = limiter
+
+app.add_exception_handler(RateLimitExceeded , _rate_limit_exceeded_handler)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
@@ -26,8 +34,6 @@ app.include_router(posts.router)
 app.include_router(profile.router)
 app.include_router(liked.router)
 app.include_router(events.router)
-
-models.Base.metadata.create_all(bind=engine)
 
 @app.get("/hello")
 def hello():

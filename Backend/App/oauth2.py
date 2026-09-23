@@ -33,24 +33,29 @@ def create_access_token(data: dict):
 
 def verify_token(token : str , error : HTTPException):
     try :
-        payload = jwt.decode(token,SECRET_KEY , algorithms=[ALGORITHM])
+        payload = jwt.decode(token , SECRET_KEY , algorithms=[ALGORITHM])
         subject = payload.get("sub")
-        if subject is None :
+        token_version = payload.get("token_version")
+        if subject is None or token_version is None :
             raise error
         try :
-            return int(subject)
+            user_id = int(subject) 
+            token_version = int(token_version)
         except (TypeError , ValueError) :
             raise error
+        return user_id , token_version
     except InvalidTokenError :
         raise error
 
-def get_current_user(access_token: str = Cookie(None),db: Session = Depends(get_db)):
+def get_current_user(access_token : str = Cookie(None) , db : Session = Depends(get_db)):
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="Could not validate credentials" , headers={"WWW-Authenticate": "Bearer"},)
     if access_token is None :
         raise credentials_exception
-    user_id = verify_token(access_token , credentials_exception)
+    user_id , token_version = verify_token(access_token , credentials_exception)
     user = db.query(models.User).filter(models.User.ID == user_id).first()
     if user is None :
+        raise credentials_exception
+    if user.Token_Version != token_version : 
         raise credentials_exception
     return user
 
@@ -61,13 +66,20 @@ def get_current_user_optional(request : Request , db : Session = Depends(get_db)
     try :
         payload = jwt.decode(token , SECRET_KEY , algorithms=[ALGORITHM])
         subject = payload.get("sub")
-        if subject is None :
+        token_version = payload.get("token_version")
+        if subject is None or token_version is None :
             return None
         try :
             user_id = int(subject)
+            token_version = int(token_version)
         except (TypeError, ValueError) :
             return None
-        return db.query(models.User).filter(models.User.ID == user_id).first()
+        user = db.query(models.User).filter(models.User.ID == user_id).first()
+        if user is None :
+            return None
+        if user.Token_version != token_version :
+            return None 
+        return user
     except InvalidTokenError :
         return None
 
