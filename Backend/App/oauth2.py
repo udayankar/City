@@ -77,7 +77,7 @@ def get_current_user_optional(request : Request , db : Session = Depends(get_db)
         user = db.query(models.User).filter(models.User.ID == user_id).first()
         if user is None :
             return None
-        if user.Token_version != token_version :
+        if user.Token_Version != token_version :
             return None 
         return user
     except InvalidTokenError :

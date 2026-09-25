@@ -12,18 +12,11 @@ const Login = () => {
     const [error , setError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const clearInputs = () => {
-        setMailTxt("");
-        setPassTxt("");
-    };
-
     const handle_login = async (e) => {
         if (e) e.preventDefault();
         if (isSubmitting) return;
-
         const trimmedEmail = MailTxt.trim();
         const trimmedPass = PassTxt.trim();
-
         if (!trimmedEmail) {
             setError("Email is required");
             return;
@@ -32,10 +25,8 @@ const Login = () => {
             setError("Password is required");
             return;
         }
-
         setIsSubmitting(true);
         setError("");
-
         try {
             const result = await LoginUser(trimmedEmail , trimmedPass);
             if (result.success) {
@@ -52,6 +43,7 @@ const Login = () => {
                 navigate("/");
             } else {
                 setPassTxt("");
+                setMailTxt("")
                 if (result?.data?.detail) {
                     if (Array.isArray(result.data.detail)) {
                         setError(result.data.detail[0]?.msg || "Login failed");

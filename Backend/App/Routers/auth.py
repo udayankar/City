@@ -1,4 +1,4 @@
-from fastapi import APIRouter , status , Response , HTTPException , Depends 
+from fastapi import APIRouter , status , Response , HTTPException , Depends , Request 
 from .. import schemas
 from sqlalchemy.orm import Session
 from ..oauth2 import create_access_token , get_current_user ,ACCESS_TOKEN_COOKIE
@@ -16,7 +16,7 @@ _DUMMY_HASH = hashed_password("dummy-password-for-timing")
 
 @router.post("/login")
 @limiter.limit("5/minute")
-async def login(userinfo : schemas.LoginUser , response : Response , db : Session = Depends(get_db)):
+async def login(request : Request , userinfo : schemas.LoginUser , response : Response , db : Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.Email == userinfo.Email).first()
     invalid_credentials = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="Incorrect email or password",)
     if user is None :

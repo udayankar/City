@@ -45,7 +45,7 @@ const Edit_Profile = ({closeEditor}) => {
                     dispatch(inUser({name: username , bio: bio}));
                 } else {
                     setEditError(true);
-                    setEditMessage("Couldn't update your profile.");
+                    setEditMessage(response.error || "Couldn't update your profile.");
                     return;
                 }
             }
@@ -92,8 +92,7 @@ const Edit_Profile = ({closeEditor}) => {
             return true;
         } else {
             setEditError(true)
-            console.log(response.error)
-            setEditMessage("Couldn't update your password.")
+            setEditMessage(response.error || "Couldn't update your password.")
             return false;
         }
     };

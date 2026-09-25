@@ -1,4 +1,4 @@
-from fastapi import APIRouter , status , HTTPException , Response , Depends
+from fastapi import APIRouter , status , HTTPException , Response , Depends , Request
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from ..schemas import UpdateUser , UpdatePassword
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/users/me")
 
 @router.put("/profile")
 @limiter.limit("30/minute")
-async def editProfile(payload : UpdateUser , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
+async def editProfile(request : Request , payload : UpdateUser , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
     data = payload.model_dump(exclude_unset=True)
     if not data:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST , detail="No changes provided")
@@ -27,7 +27,7 @@ async def editProfile(payload : UpdateUser , response : Response , db : Session 
 
 @router.put("/password")
 @limiter.limit("5/minute")
-async def editPassword(payload : UpdatePassword , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
+async def editPassword(request : Request , payload : UpdatePassword , response : Response , db : Session = Depends(get_db) , current_user = Depends(get_current_user)):
     if not verify_password(payload.CurrPass, current_user.Password) :
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="Current password is incorrect")
     if verify_password(payload.NewPass, current_user.Password) :

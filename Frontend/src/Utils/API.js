@@ -2,7 +2,8 @@ const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:8000";
 
 export const SignupUser = async (username, email, password) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/users/signup/`, {
+        // No trailing slash — FastAPI redirects POST with body loss on 307/308
+        const response = await fetch(`${API_BASE_URL}/users/signup`, {
             method : "POST",
             headers : {
                 "Content-Type": "application/json"
@@ -142,7 +143,7 @@ export const Save_Posts = async (id) => {
 export const Unsave_Posts = async (id) => {
     try {
         const response = await fetch(`${API_BASE_URL}/posts/${id}/unsave` , {
-            method : "POST",
+            method : "DELETE",
             credentials : "include"
         });
         const data = await response.json();
@@ -182,7 +183,7 @@ export const Like_Posts = async (id) => {
 export const Unlike_Posts = async (id) => {
     try {
         const response = await fetch(`${API_BASE_URL}/posts/${id}/unlike` , {
-            method : "POST",
+            method : "DELETE",
             credentials : "include"
         });
         const data = await response.json();
@@ -199,41 +200,53 @@ export const Unlike_Posts = async (id) => {
     }
 };
 
-export const All_Posts = async (search) => {
+// limit/offset support added for pagination/infinite scroll
+// search is URL-encoded to handle spaces and special characters safely
+export const All_Posts = async (search = "", limit = 20, offset = 0) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/posts?search=${search}` , {
+        const params = new URLSearchParams({
+            search: search,
+            limit: String(limit),
+            offset: String(offset)
+        });
+        const response = await fetch(`${API_BASE_URL}/posts?${params}` , {
             credentials : "include"
-        })
-        const data = await response.json()
+        });
+        const data = await response.json();
         return {
             success : response.ok,
             data
-        }
+        };
     } catch (error) {
         return {
             success : false,
             data : null,
             error: error.message
-        }
+        };
     }
 };
 
-export const My_Posts = async () => {
+// limit/offset support added for pagination
+export const My_Posts = async (limit = 20, offset = 0) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/me/posts` , {
+        const params = new URLSearchParams({
+            limit: String(limit),
+            offset: String(offset)
+        });
+        const response = await fetch(`${API_BASE_URL}/me/posts?${params}` , {
             credentials : "include"
-        })
-        const data = await response.json()
+        });
+        const data = await response.json();
         return {
             success : response.ok,
             data
-        }
+        };
     } catch (error) {
         return {
             success : false,
             data : null,
             error: error.message
-        }
+        };
     }
 };
 
@@ -250,17 +263,17 @@ export const Add_Post = async (title , content , location) => {
                 Content : content,
                 Location : location
             })
-        })
-        const data = await response.json()
+        });
+        const data = await response.json();
         return {
             success : response.ok,
             data
-        }
+        };
     } catch (error) {
         return {
             success : false,
             error: error.message
-        }
+        };
     }
 };
 
@@ -273,15 +286,26 @@ export const Edit_Profile = async (payload) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(payload)
-        })
-        return {
-            success : response.ok
+        });
+        // Parse error detail from backend so callers can surface it
+        if (!response.ok) {
+            let detail = "Could not update profile.";
+            try {
+                const body = await response.json();
+                if (body?.detail) {
+                    detail = Array.isArray(body.detail)
+                        ? body.detail[0]?.msg || detail
+                        : body.detail;
+                }
+            } catch (_) { /* ignore parse errors */ }
+            return { success: false, error: detail };
         }
+        return { success: true };
     } catch (error) {
         return {
             success : false,
             error: error.message
-        }
+        };
     }
 };
 
@@ -294,32 +318,53 @@ export const Edit_Password = async (payload) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(payload)
-        })
-        return {success : response.ok}
+        });
+        // Parse error detail from backend so callers can surface it
+        if (!response.ok) {
+            let detail = "Could not update password.";
+            try {
+                const body = await response.json();
+                if (body?.detail) {
+                    detail = Array.isArray(body.detail)
+                        ? body.detail[0]?.msg || detail
+                        : body.detail;
+                }
+            } catch (_) { /* ignore parse errors */ }
+            return { success: false, error: detail };
+        }
+        return { success: true };
     } catch (error) {
         return {
             success : false,
             error: error.message
-        }
+        };
     }
 };
 
-export const All_Events = async (search = "" , category = "" , sort = "") => {
+// limit/offset support added for pagination/infinite scroll
+export const All_Events = async (search = "" , category = "" , sort = "", limit = 20, offset = 0) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/events?search=${search}&category=${category}&sort=${sort}` , {
+        const params = new URLSearchParams({
+            search: search,
+            category: category,
+            sort: sort,
+            limit: String(limit),
+            offset: String(offset)
+        });
+        const response = await fetch(`${API_BASE_URL}/events?${params}` , {
             credentials : "include"
-        })
-        const data = await response.json()
+        });
+        const data = await response.json();
         return {
             success : response.ok,
             data
-        }
+        };
     } catch (error) {
         return {
             success : false,
             data : null,
             error: error.message
-        }
+        };
     }
 };
 
@@ -329,16 +374,16 @@ export const Save_Events = async (id) => {
             method : "POST",
             credentials : "include"
         });
-        const data = await response.json()
+        const data = await response.json();
         return {
             success : response.ok,
             data
-        }
+        };
     } catch (error) {
         return {
             success : false,
             error: error.message
-        }
+        };
     }
 };
 
@@ -348,15 +393,15 @@ export const Unsave_Events = async (id) => {
             method : "DELETE",
             credentials : "include"
         });
-        const data = await response.json()
+        const data = await response.json();
         return {
             success : response.ok,
             data
-        }
+        };
     } catch (error) {
         return {
             success : false,
             error: error.message
-        }
+        };
     }
 };

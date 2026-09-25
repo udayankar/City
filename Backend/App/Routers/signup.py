@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Response, HTTPException, Depends
+from fastapi import APIRouter, status, Response, HTTPException, Depends , Request
 from .. import schemas
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -12,7 +12,7 @@ router = APIRouter(prefix="/users" , tags=["Users"])
 
 @router.post("/signup" , response_model=schemas.ReturnSignupUser)
 @limiter.limit("5/minute")
-async def SignupUser(payload : schemas.SignupUser , response : Response , db : Session = Depends(get_db)):
+async def SignupUser(request : Request , payload : schemas.SignupUser , response : Response , db : Session = Depends(get_db)):
     existing = db.execute(select(models.User).where(models.User.Email == payload.Email)).scalar_one_or_none()
     if existing :
         raise HTTPException(status_code=status.HTTP_409_CONFLICT , detail="Email already registered")

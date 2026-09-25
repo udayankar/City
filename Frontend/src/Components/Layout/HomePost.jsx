@@ -14,7 +14,22 @@ const HomePost = ({image , ID , Username , Title , Content , Location , isSaved 
     const user = useSelector((store) => store.User);
     const dispatch = useDispatch();
     const isLoggedin = user.isLoggedIn;
-    
+
+    // Sync props → local state when the parent re-fetches and updates this post's data.
+    // Without this, React reuses the component instance (same key=ID) so useState initial
+    // values become stale after any parent re-render with fresh server data.
+    useEffect(() => {
+        setSaved(isSaved);
+    }, [isSaved]);
+
+    useEffect(() => {
+        setLiked(isLiked);
+    }, [isLiked]);
+
+    useEffect(() => {
+        setLikeCount(Likes ?? 0);
+    }, [Likes]);
+
     let time = "Recently";
     if (Created_at) {
         const now = new Date();

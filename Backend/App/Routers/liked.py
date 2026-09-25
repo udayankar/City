@@ -36,7 +36,7 @@ async def addLiked(id : int , response : Response , db : Session = Depends(get_d
     response.status_code = status.HTTP_201_CREATED
     return new_liked
 
-@router.delete("/posts/{id}/like")
+@router.delete("/posts/{id}/unlike")
 async def removeLike(id : int , db : Session = Depends(get_db) ,current_user=Depends(get_current_user)):
     liked = db.query(models.Liked_Posts).filter(models.Liked_Posts.Post_ID == id , models.Liked_Posts.User_ID == current_user.ID).first()
     if liked is None:

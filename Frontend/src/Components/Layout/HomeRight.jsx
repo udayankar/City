@@ -12,17 +12,6 @@ const HomeRight = () => {
     const [events , setEvents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const handle_events = async () => {
-        setIsLoading(true);
-        try {
-            const result = await All_Events();
-            if (result.success && Array.isArray(result.data)) {
-                setEvents(result.data);
-            }
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     useEffect(() => {
         let isCurrent = true;

@@ -12,6 +12,11 @@ const HomeEvent = ({ID , Title , Location , Start_Date , End_Date , Image , isSa
     const user = useSelector((store) => store.User);
     const isLoggedin = user.isLoggedIn;
 
+    // Sync isSaved prop → local state when parent re-fetches with fresh server data.
+    useEffect(() => {
+        setSaved(isSaved);
+    }, [isSaved]);
+
     const formatDate = (date) => {
         if (!date) return "";
         const parsed = new Date(date);

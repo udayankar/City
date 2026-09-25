@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SignupUser } from "../Utils/API";
-import { inUser } from "../Utils/UserSlice";
-import { useDispatch } from "react-redux";
 
 const Signup = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const [UserTxt, setUserTxt] = useState("");
     const [MailTxt, setEmailTxt] = useState("");
@@ -14,20 +11,12 @@ const Signup = () => {
     const [error , setError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const clearInputs = () => {
-        setUserTxt("");
-        setEmailTxt("");
-        setPassTxt("");
-    };
-
     const handle_signup = async (e) => {
         if (e) e.preventDefault();
         if (isSubmitting) return;
-
         const trimmedUser = UserTxt.trim();
         const trimmedEmail = MailTxt.trim();
         const trimmedPass = PassTxt.trim();
-
         if (!trimmedUser) {
             setError("Username is required");
             return;
@@ -44,15 +33,14 @@ const Signup = () => {
             setError("Password must be at least 8 characters long");
             return;
         }
-
         setIsSubmitting(true);
         setError("");
-
         try {
             const result = await SignupUser(trimmedUser, trimmedEmail, trimmedPass);
             if (result.success) {
-                dispatch(inUser({ name: trimmedUser, email: trimmedEmail }));
-                navigate("/");
+                // Backend only sets a session cookie on /users/login, not on /users/signup.
+                // Redirect to login so the user completes a real login and receives a valid cookie.
+                navigate("/login");
             } else {
                 setPassTxt("");
                 if (result?.data?.detail) {

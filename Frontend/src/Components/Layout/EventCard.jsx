@@ -13,6 +13,15 @@ const EventCard = ({ID , Title , Description , Location , Start_Date , End_Date 
     const user = useSelector((store) => store.User);
     const isLoggedin = user.isLoggedIn;
 
+    // Sync props → local state when parent re-fetches and passes updated server data.
+    useEffect(() => {
+        setSaved(isSaved);
+    }, [isSaved]);
+
+    useEffect(() => {
+        setSavedCount(Saved_Counts ?? 0);
+    }, [Saved_Counts]);
+
     const formatDate = (date) => {
         if (!date) return "";
         const parsed = new Date(date);
